@@ -20,10 +20,24 @@ The front end application located in [/app](/app) is a [React](https://reactjs.o
 To get startted and runt he application a little local environment setup is required
 
 1. Install nodejs (LTS) https://nodejs.org/en/
-2. Install yarn (globally) - `npm install -g yarn`
-3. clone this repository - `git clone https://gitlab.com/testimonialtree-group/fgcu-senior-project/customer-health-dashboard.git` (or with ssh)
-4. change directory to /app `cd customer-health-dashboard/app`
-5. install depedencies - `yarn install`
-6. run the applicaiton - `yarn dev`
+2. Install yarn (globally)
+    
+    `npm install -g yarn`
+
+3. clone this repository (https or ssh)
+    
+    `git clone https://gitlab.com/testimonialtree-group/fgcu-senior-project/customer-health-dashboard.git`
+
+4. change directory to /app
+    
+    `cd customer-health-dashboard/app`
+
+5. install depedencies
+    
+    `yarn install`
+
+6. run the applicaiton
+    
+    `yarn dev`
 
 #### Backend Applicaiton
