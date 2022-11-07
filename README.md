@@ -41,3 +41,19 @@ To get startted and runt he application a little local environment setup is requ
     `yarn dev`
 
 #### Backend Applicaiton
+
+The backend application is located at C:\src\fgcu-senior-project\customer-health-dashboard\api\customer-health-dashboard-webapi\customer-health-dashboard-webapi.sln
+
+1.  Open using Visual Studio and select the "Solution View" not the "Folder View"
+
+2.  Right click the project titled "CustomerHealthDashboardWebApi" and choose Mangage User Secrets
+
+3.  Save a json file that looks like this as your local configuration source:
+{
+  "tt-connection-string": "Data Source=devdb.testimonialtree.com;Initial Catalog=TestimonialTree;User ID=fgcu;Password=mypasswordhere;Encrypt=True;TrustServerCertificate=True;MultipleActiveResultSets=True",
+  "tt-connection-timeout":  30
+}
+
+4.  Debug..Start Debugging to launch the application.  You should be able to browse the following path:
+
+https://localhost:7107/api/v1/parentusers
