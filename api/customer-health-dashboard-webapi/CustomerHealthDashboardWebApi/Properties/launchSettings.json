@@ -1,0 +1,32 @@
+{
+  "profiles": {
+    "CustomerHealthDashboardWebApi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/v1/parentusers",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7107;http://localhost:5107",
+      "sqlDebugging": false
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/v1/parentusers",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:24150",
+      "sslPort": 44335
+    }
+  }
+}
