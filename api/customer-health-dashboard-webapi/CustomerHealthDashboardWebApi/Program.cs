@@ -19,6 +19,11 @@ namespace CustomerHealthDashboardWebApi
                 .Build();
 
             // Add services to the container.provider =>
+            builder.Services.AddCors(options => options.AddPolicy(name: "DefaultPolicy",
+                corsPolicyBuilder =>
+                {
+                    corsPolicyBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                }));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -57,6 +62,7 @@ namespace CustomerHealthDashboardWebApi
 
             app.UseAuthorization();
 
+            app.UseCors("DefaultPolicy");
 
             app.MapControllers();
 
