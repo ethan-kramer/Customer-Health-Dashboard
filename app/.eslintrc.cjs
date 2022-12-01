@@ -26,11 +26,8 @@ module.exports = {
   },
   rules: {
     // override/add rules settings here, such as:
-
-    'vue/no-unused-vars': 'error'
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'warn',
-    'empty-brace-spaces': 'warn', //Enforce no spaces between braces.
+    // 'empty-brace-spaces': 'warn', //Enforce no spaces between braces.
   },
 };
-
