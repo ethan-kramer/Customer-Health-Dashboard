@@ -17,64 +17,58 @@ import Paper from '@mui/material/Paper';
 
 import './App.css'
 
-function App() {
+//{
+ //   parentUsers.map(parentUser => {
+   //     return (
+     //       <option onClickvalue="childTable()">{parentUser.userId}>{parentUser.username}</option>  // event based on userID 
+       // )
+    //})
+//}
+
+function App() { // is everything supposed to be under app function?
     const [parentUsers, setParentUsers] = useState(null);
+   // const [childUsers, setChildUsers] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    function childTable() {
+        console.log("Selected parent");
+    }
+
+    // yarn format
     // Fetching data from API
     useEffect(() => {
         setLoading(true);
         fetch('https://localhost:7107/api/v1/parentusers')
+       // fetch('https://localhost:7107/api/v1/parentusers/{parentUserId:INT}/childusers')
             .then(response => response.json())
             .then((json) => setParentUsers(json))
+          //  .then((json) => setChildUsers(json))
             .catch(error => setError(error))
             .finally(() => setLoading(false));
     }, [])
 
- 
+
     const renderContent = () => {
         if (loading) return <div>loading...</div>
 
         if (error) return <div>{error.message}</div>
 
+
         return (
             <div style={{ width: '100%', textAlign: "left" }}>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>UserID</TableCell>
-                                <TableCell align="right">Username</TableCell>
-                                <TableCell align="right">Name</TableCell>
-                                <TableCell align="right">Company</TableCell>
-                                <TableCell align="right">Parent User</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow
-                            >
-                                <TableCell component="th" scope="row">
-
-                                </TableCell>
-                                <TableCell align="right">{ }</TableCell>
-                                <TableCell align="right">{ }</TableCell>
-                                <TableCell align="right">{ }</TableCell>
-                                <TableCell align="right">{ }</TableCell>
-                            </TableRow>
-
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <code>
-                    <pre>
-                        {JSON.stringify(parentUsers, undefined, 2)}      
-                    </pre>
-                </code>
+                <select>
+                    {parentUsers.map(parentUser => { // onchange event?
+                        return (
+                            <option value={parentUser.userId} onChange={childTable}>{parentUser.username}</option>
+                        )
+                    })}
+                </select>
             </div>
 
         )
 
+        
     }
 
     return (
@@ -83,5 +77,9 @@ function App() {
         </div>
     )
 }
+
+
+
+
 
 export default App

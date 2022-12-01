@@ -69,6 +69,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
             var userDto = new UserInfoDto();
             userDto.Username = dataUserInfo.Username;
             userDto.UserId = dataUserInfo.UserId;
+            userDto.CompanyName = dataUserInfo.CompanyName;
             //etc....
             //Finish the mapping here....
 
