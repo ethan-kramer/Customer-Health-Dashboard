@@ -39,7 +39,6 @@ namespace CustomerHealthDashboardWebApi.Controllers
             {
                 //build the dtos here that you will send to the front end
                 var userDto = GetUserInfoDto(dbResult);
-
                 userDtos.Add(userDto);
             }
             return userDtos;
