@@ -1,12 +1,5 @@
-import { useEffect, useState } from 'react'
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
-import reactLogo from './assets/react.svg';
+import { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,71 +8,62 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import './App.css'
+import './App.css';
 
 //{
- //   parentUsers.map(parentUser => {
-   //     return (
-     //       <option onClickvalue="childTable()">{parentUser.userId}>{parentUser.username}</option>  // event based on userID 
-       // )
-    //})
+//   parentUsers.map(parentUser => {
+//     return (
+//       <option onClickvalue="childTable()">{parentUser.userId}>{parentUser.username}</option>  // event based on userID
+// )
+//})
 //}
 
-function App() { // is everything supposed to be under app function?
-    const [parentUsers, setParentUsers] = useState(null);
-   // const [childUsers, setChildUsers] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+function App() {
+  // is everything supposed to be under app function?
+  const [parentUsers, setParentUsers] = useState(null);
+  // const [childUsers, setChildUsers] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-    function childTable() {
-        console.log("Selected parent");
-    }
+  function childTable() {
+    console.log('Selected parent');
+  }
 
-    // yarn format
-    // Fetching data from API
-    useEffect(() => {
-        setLoading(true);
-        fetch('https://localhost:7107/api/v1/parentusers')
-       // fetch('https://localhost:7107/api/v1/parentusers/{parentUserId:INT}/childusers')
-            .then(response => response.json())
-            .then((json) => setParentUsers(json))
-          //  .then((json) => setChildUsers(json))
-            .catch(error => setError(error))
-            .finally(() => setLoading(false));
-    }, [])
+  // yarn format
+  // Fetching data from API
+  useEffect(() => {
+    setLoading(true);
+    fetch('https://localhost:7107/api/v1/parentusers')
+      // fetch('https://localhost:7107/api/v1/parentusers/{parentUserId:INT}/childusers')
+      .then((response) => response.json())
+      .then((json) => setParentUsers(json))
+      //  .then((json) => setChildUsers(json))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
+  }, []);
 
+  const renderContent = () => {
+    if (loading) return <div>loading...</div>;
 
-    const renderContent = () => {
-        if (loading) return <div>loading...</div>
-
-        if (error) return <div>{error.message}</div>
-
-
-        return (
-            <div style={{ width: '100%', textAlign: "left" }}>
-                <select>
-                    {parentUsers.map(parentUser => { // onchange event?
-                        return (
-                            <option value={parentUser.userId} onChange={childTable}>{parentUser.username}</option>
-                        )
-                    })}
-                </select>
-            </div>
-
-        )
-
-        
-    }
+    if (error) return <div>{error.message}</div>;
 
     return (
-        <div className="App">
-            {renderContent()}
-        </div>
-    )
+      <div style={{ width: '100%', textAlign: 'left' }}>
+        <select>
+          {parentUsers.map((parentUser) => {
+            // onchange event?
+            return (
+              <option value={parentUser.userId} onChange={childTable}>
+                {parentUser.username}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  };
+
+  return <div className="App">{renderContent()}</div>;
 }
 
-
-
-
-
-export default App
+export default App;
