@@ -7,59 +7,57 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import TablePagination from '@mui/material/TablePagination';
+
 
 import './App.css';
 
-//{
-//   parentUsers.map(parentUser => {
-//     return (
-//       <option onClickvalue="childTable()">{parentUser.userId}>{parentUser.username}</option>  // event based on userID
-// )
-//})
-//}
-
 function App() {
-  // is everything supposed to be under app function?
-  const [parentUsers, setParentUsers] = useState(null);
-  // const [childUsers, setChildUsers] = useState(null);
-  const [error, setError] = useState(null);
+    const [parentUsers, setParentUsers] = useState([]); 
+    const [selectedUserId, setSelectedUserId] = useState(null);
+   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  function childTable() {
-    console.log('Selected parent');
-  }
 
-  // yarn format
   // Fetching data from API
   useEffect(() => {
     setLoading(true);
     fetch('https://localhost:7107/api/v1/parentusers')
-      // fetch('https://localhost:7107/api/v1/parentusers/{parentUserId:INT}/childusers')
       .then((response) => response.json())
       .then((json) => setParentUsers(json))
-      //  .then((json) => setChildUsers(json))
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, []);
+          .finally(() => setLoading(false));
+  }, []); // empty dependency array bc need effect to run once for fetching API data
+
+
+    function handleChange(event) { 
+        setSelectedUserId(event.userId);
+        console.log(event.userId);
+    }
 
   const renderContent = () => {
-    if (loading) return <div>loading...</div>;
-
-    if (error) return <div>{error.message}</div>;
-
-    return (
-      <div style={{ width: '100%', textAlign: 'left' }}>
-        <select>
-          {parentUsers.map((parentUser) => {
-            // onchange event?
-            return (
-              <option value={parentUser.userId} onChange={childTable}>
-                {parentUser.username}
-              </option>
-            );
-          })}
-        </select>
-      </div>
+      if (loading) return <div>loading...</div>;
+      if (error) return <div>{error.message}</div>;
+      return (
+        <TableContainer component={Paper }>
+              <Table sx={{minWidth: 650}}  size="small" aria-label="a dense table">
+                  <TableHead >
+                      <TableRow sx={{ backgroundColor:"#B6D770" }}>
+                          <TableCell>Company</TableCell>
+                    <TableCell>Current Week Surveys</TableCell>
+                    <TableCell>Last Week Surveys</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {parentUsers.map((parentUser) => ( // calls function on every element in original array
+                    <TableRow
+                        key={parentUser.userId} onClick={() => handleChange(parentUser)}>
+                        <TableCell>{parentUser.username}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+              </Table>
+          </TableContainer>
     );
   };
 
