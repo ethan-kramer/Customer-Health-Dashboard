@@ -8,57 +8,42 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
+import ParentUserTable from './ParentUserTable';
+import SelectedUser from './SelectedUser';
 
 
 import './App.css';
 
 function App() {
-    const [parentUsers, setParentUsers] = useState([]); 
-    const [selectedUserId, setSelectedUserId] = useState(null);
-   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+    const [parentUsers, setParentUsers] = useState([]);
+    const [selectParentUser, setSelectedParentUser] = useState(null);
 
-
-  // Fetching data from API
-  useEffect(() => {
-    setLoading(true);
-    fetch('https://localhost:7107/api/v1/parentusers')
-      .then((response) => response.json())
-      .then((json) => setParentUsers(json))
-      .catch((error) => setError(error))
-          .finally(() => setLoading(false));
-  }, []); // empty dependency array bc need effect to run once for fetching API data
-
-
-    function handleChange(event) { 
-        setSelectedUserId(event.userId);
-        console.log(event.userId);
+    const receiveParentUserData = (data) => { // data from child component
+        setParentUsers(data);
+        setSelectedParentUser(data);
+        console.log(data);
     }
 
-  const renderContent = () => {
-      if (loading) return <div>loading...</div>;
-      if (error) return <div>{error.message}</div>;
-      return (
-        <TableContainer component={Paper }>
-              <Table sx={{minWidth: 650}}  size="small" aria-label="a dense table">
-                  <TableHead >
-                      <TableRow sx={{ backgroundColor:"#B6D770" }}>
-                          <TableCell>Company</TableCell>
-                    <TableCell>Current Week Surveys</TableCell>
-                    <TableCell>Last Week Surveys</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {parentUsers.map((parentUser) => ( // calls function on every element in original array
-                    <TableRow
-                        key={parentUser.userId} onClick={() => handleChange(parentUser)}>
-                        <TableCell>{parentUser.username}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-              </Table>
-          </TableContainer>
-    );
+    const renderContent = () => {
+
+        if (selectParentUser != null) { // if user selected, render new component
+            return (
+                <div>
+                    <SelectedUser
+                        parentUsers={parentUsers} />
+                </div>
+            )
+        }
+
+        return (
+            <div>
+                <ParentUserTable // return main parent users table
+                    sendInfo={receiveParentUserData}
+                    parentUsers={parentUsers}
+                    parentUserSelected={(parentUsers) => setSelectedParentUser(parentUsers)}>
+                </ParentUserTable>
+            </div>
+        );
   };
 
   return <div className="App">{renderContent()}</div>;
