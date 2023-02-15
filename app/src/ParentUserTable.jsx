@@ -19,8 +19,6 @@ const ParentUserTable = (props) => {
 
     const [searchValue, setSearchValue] = useState(''); 
 
-
-
         // Fetching data from API
         useEffect(() => {
             setLoading(true);
@@ -37,7 +35,7 @@ const ParentUserTable = (props) => {
        if (error) return <div>{error.message}</div>;
 
     function sendInfo(parentUser) { // send username info to parent component
-          props.sendInfo(parentUser.username);
+        props.sendInfo(parentUser.username);
     };
 
 
@@ -91,6 +89,7 @@ const ParentUserTable = (props) => {
                         onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
                 </TableContainer >
+            
              
             </div>
 

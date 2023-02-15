@@ -18,19 +18,23 @@ function App() {
     const [parentUsers, setParentUsers] = useState([]);
     const [selectParentUser, setSelectedParentUser] = useState(null);
 
-    const receiveParentUserData = (data) => { // data from child component
-        setParentUsers(data);
-        setSelectedParentUser(data);
+    const receiveParentUserData = (parentUserData) => { // data from child component
+        setParentUsers(parentUserData);
+        setSelectedParentUser(parentUserData);
         console.log(data);
     }
 
     const renderContent = () => {
 
-        if (selectParentUser != null) { // if user selected, render new component
+        if (selectParentUser != null) { // if user selected, render new component under the table
             return (
                 <div>
+                    <ParentUserTable
+                        sendInfo={receiveParentUserData}
+                    />
                     <SelectedUser
-                        parentUsers={parentUsers} />
+                        parentUsers={parentUsers}
+                    />
                 </div>
             )
         }
@@ -39,8 +43,9 @@ function App() {
             <div>
                 <ParentUserTable // return main parent users table
                     sendInfo={receiveParentUserData}
-                    parentUsers={parentUsers}
-                    parentUserSelected={(parentUsers) => setSelectedParentUser(parentUsers)}>
+                  //  parentUsers={parentUsers}
+               //  parentUserSelected={(parentUsers) => setSelectedParentUser(parentUsers)}
+                >
                 </ParentUserTable>
             </div>
         );
