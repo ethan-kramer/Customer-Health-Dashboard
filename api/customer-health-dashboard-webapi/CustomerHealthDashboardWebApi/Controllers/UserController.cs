@@ -62,6 +62,28 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return userDtos;
         }
 
+        /*
+        // getting testimonials for selected parent user
+        [HttpGet("/api/v1/data/{ActualUserID}/testimonials")]
+        public List<TestimonialsDto> GetUserTestimonials(int ActualUserID)
+        {
+            var testimonialsDtos = new List<TestimonialsDto>();
+
+            var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
+            // needs to be changed
+            var dbResults = dbSet.Where(x => x.ParentId == parentUserId).ToList();
+
+            foreach (var dbResult in dbResults)
+            {
+                //build the dtos here that you will send to the front end
+                var testimonialsDto = GetUserInfoDto(dbResult);
+
+                testimonialsDtos.Add(testimonialsDto);
+            }
+            return testimonialsDtos;
+        }
+        */
+        
         private UserInfoDto GetUserInfoDto(Data.UserInfo dataUserInfo)
         {
             //This maps the db model to the dto you will send to the front end
@@ -74,6 +96,15 @@ namespace CustomerHealthDashboardWebApi.Controllers
             //Finish the mapping here....
 
             return userDto;
+        }
+
+
+        // should create Dto?
+        private TestimonialsDto GetTestimonialsDto(Data.Testimonials dataTestimonials)
+        {
+            var testimonialsDto = new TestimonalsDto();
+            testimonialsDto.ActualUserID = dataTestimonials.ActualUserID;
+            testimonialsDto.dateTimeStamp = dataTestimonials.DateTimeStamp;
         }
     }
 }
