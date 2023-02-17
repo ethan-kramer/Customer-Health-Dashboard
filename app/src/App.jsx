@@ -14,12 +14,13 @@ import './App.css';
 
 function App() {
     const [parentUsers, setParentUsers] = useState([]); 
+    const [childUsers, setChildUsers] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(null);
    const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
 
-  // Fetching data from API
+  // Fetching ParentUsers from API
   useEffect(() => {
     setLoading(true);
     fetch('https://localhost:7107/api/v1/parentusers')
@@ -30,10 +31,23 @@ function App() {
   }, []); // empty dependency array bc need effect to run once for fetching API data
 
 
-    function handleChange(event) { 
+    function updateUserId(event) { 
+        console.log("Entire user: ", event)
         setSelectedUserId(event.userId);
         console.log(event.userId);
+        console.log("Child users: ", childUsers)
     }
+
+    // Fetching ChildUsers from API
+    useEffect(() => {
+        setLoading(true);
+        fetch(`https://localhost:7107/api/v1/parentusers/${selectedUserId}/childusers`)    // selectedUserId not accessible
+            .then((response) => response.json())
+            .then((json) => setChildUsers(json))
+            .catch((error) => setError(error))
+            .finally(() => setLoading(false));
+    }, [selectedUserId]); // empty dependency array bc need effect to run once for fetching API data 
+
 
   const renderContent = () => {
       if (loading) return <div>loading...</div>;
@@ -51,7 +65,7 @@ function App() {
             <TableBody>
                 {parentUsers.map((parentUser) => ( // calls function on every element in original array
                     <TableRow
-                        key={parentUser.userId} onClick={() => handleChange(parentUser)}>
+                        key={parentUser.userId} onClick={() => updateUserId(parentUser)}>
                         <TableCell>{parentUser.username}</TableCell>
                     </TableRow>
                 ))}
@@ -61,7 +75,11 @@ function App() {
     );
   };
 
+
+
   return <div className="App">{renderContent()}</div>;
 }
+
+
 
 export default App;

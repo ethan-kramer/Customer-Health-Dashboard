@@ -8,6 +8,7 @@ namespace CustomerHealthDashboardWebApi.Data
     public partial class TestimonialTreeContext : DbContext
     {
         public virtual DbSet<UserInfo> UserInfo { get; set; }
+        public virtual DbSet<Testimonials> Testimonials { get; set; }   // new
 
         public TestimonialTreeContext(DbContextOptions<TestimonialTreeContext> options) : base(options)
         {
