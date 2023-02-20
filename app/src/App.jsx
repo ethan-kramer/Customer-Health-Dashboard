@@ -21,7 +21,7 @@ function App() {
     const receiveParentUserData = (parentUserData) => { // data from child component
         setParentUsers(parentUserData);
         setSelectedParentUser(parentUserData);
-        console.log(data);
+      
     }
 
     const renderContent = () => {
@@ -29,9 +29,7 @@ function App() {
         if (selectParentUser != null) { // if user selected, render new component under the table
             return (
                 <div>
-                    <ParentUserTable
-                        sendInfo={receiveParentUserData}
-                    />
+                
                     <SelectedUser
                         parentUsers={parentUsers}
                     />

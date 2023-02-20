@@ -1,0 +1,55 @@
+﻿.selected-user-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.customer-health-heading {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.parent-user-text {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.customer-health-heading {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.parent-user-text {
+    margin-bottom: 20px;
+}
+
+/* Fake data table just for visualization*/
+.data-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    .data-table th,
+    .data-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .data-table th {
+        background-color: #B6D770;
+        color: #555;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .data-table tr:hover {
+        background-color: #ddd;
+    }
+
+  
