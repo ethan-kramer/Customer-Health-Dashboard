@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CustomerHealthDashboardWebApi.Data
+﻿namespace CustomerHealthDashboardWebApi.Dto.Testimonials
 {
-    public partial class Testimonials
+    public class TestimonialsDto
     {
-        public Testimonials()
-        {
-            InverseParent = new HashSet<Testimonials>();    // what is this for?
-        }
-
         public int TestimonialID { get; set; }
-        public int UserID{ get; set; }
+        public int UserID { get; set; }
         public string Signature { get; set; }
         public string Email { get; set; }
         public string Testimonial { get; set; }
@@ -23,7 +15,7 @@ namespace CustomerHealthDashboardWebApi.Data
         public string? Relationship { get; set; }
         public string? FacebookLiked { get; set; }
         public string Source { get; set; }
-        public DateTime? LastUpdated { get; set; }     
+        public DateTime? LastUpdated { get; set; }    
         public string OriginalTestimonial { get; set; }
         public string Deleted { get; set; }
         public string originalClientIP { get; set; }
@@ -38,13 +30,10 @@ namespace CustomerHealthDashboardWebApi.Data
         public string lastUpdatedUsername { get; set; }
         public string TestimonialStatusID { get; set; }
         public int? oldtestimonialid { get; set; }
-        public string ActualUserID { get; set; }        
+        public string ActualUserID { get; set; }
         public string SignatureNVarChar { get; set; }
         public string ExternalSource { get; set; }
         public string ReScrape { get; set; }
-        public string ThirdPartySiteDataID { get; set; }        // end of tuples
-
-        public virtual Testimonials Parent { get; set; }    // should this be deleted or changed to something else?
-        public virtual ICollection<Testimonials> InverseParent { get; set; }    // ""
+        public string ThirdPartySiteDataID { get; set; }       
     }
 }
