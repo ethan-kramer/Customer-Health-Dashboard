@@ -1,8 +1,10 @@
 ﻿using CustomerHealthDashboardWebApi.Data;
 using CustomerHealthDashboardWebApi.Dto.User;
+using CustomerHealthDashboardWebApi.Dto.Testimonials;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System.Xml.Linq;
 
@@ -62,7 +64,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return userDtos;
         }
 
-        /*
+        
         // getting testimonials for selected parent user
         [HttpGet("/api/v1/data/{ActualUserID}/testimonials")]
         public List<TestimonialsDto> GetUserTestimonials(int ActualUserID)
@@ -70,19 +72,34 @@ namespace CustomerHealthDashboardWebApi.Controllers
             var testimonialsDtos = new List<TestimonialsDto>();
 
             var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
-            // needs to be changed
-            var dbResults = dbSet.Where(x => x.ParentId == parentUserId).ToList();
+
+            
+            string query = "WITH CTE AS (" +
+                "SELECT" +
+                "ActualUserId," +
+                "DATEPART(YEAR, DateTimeStamp) AS [Year]," +
+                "DATEPART(WEEK, DateTimestamp) AS [Week]," +
+                "COUNT(*) AS [NumberOfTestimonials]" +
+                "FROM Testimonials T " +
+                "WHERE DateTimeStamp > DATEADD(MONTH, -1, GETDATE())" +
+                "GROUP BY ActualUserId, DATEPART(YEAR, DateTimeStamp), DATEPART(WEEK, DateTimestamp)" +
+                ")" +
+                "SELECT UI.*" +
+                "FROM CTE" +
+                "LEFT JOIN UserInfo UI ON UI.UserID = CTE.ActualUserID" +
+                "WHERE CTE.NumberOfTestimonials > 5;";
+
+            var dbResults = _dbContext.Testimonials.FromSqlRaw(query).ToList();
 
             foreach (var dbResult in dbResults)
             {
                 //build the dtos here that you will send to the front end
-                var testimonialsDto = GetUserInfoDto(dbResult);
-
+                var testimonialsDto = GetTestimonialsDto(dbResult);
                 testimonialsDtos.Add(testimonialsDto);
             }
             return testimonialsDtos;
         }
-        */
+        
         
         private UserInfoDto GetUserInfoDto(Data.UserInfo dataUserInfo)
         {
@@ -99,12 +116,12 @@ namespace CustomerHealthDashboardWebApi.Controllers
         }
 
 
-        // should create Dto?
+        // "not all code paths return a value"?
         private TestimonialsDto GetTestimonialsDto(Data.Testimonials dataTestimonials)
         {
-            var testimonialsDto = new TestimonalsDto();
+            var testimonialsDto = new TestimonialsDto();
             testimonialsDto.ActualUserID = dataTestimonials.ActualUserID;
-            testimonialsDto.dateTimeStamp = dataTestimonials.DateTimeStamp;
+            testimonialsDto.DateTimeStamp = dataTestimonials.DateTimeStamp;
         }
     }
 }
