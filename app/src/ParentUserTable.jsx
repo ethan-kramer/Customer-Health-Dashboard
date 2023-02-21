@@ -18,7 +18,7 @@ const ParentUserTable = (props) => {
     const [searchValue, setSearchValue] = useState('');
 
     // table pagination
-    const [page, setPage] = useState(2);
+    const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const handleChangePage = (event, newPage) => { // update page when it is changed
@@ -71,17 +71,17 @@ const ParentUserTable = (props) => {
     return (
         <div>
             {parentUsers.length > 0 ? ( // if there are parent users then display table
+
                 < TableContainer component={Paper} >
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="custom pagination table">
-
+                      
                         <TableHead >
                             <TableRow sx={{ backgroundColor: "#B6D770" }}>
                                 <TableCell sx={{ fontWeight: 'bold', fontSize: 16, color: '#555', textTransform: 'uppercase' }}>Company</TableCell>
                                 <TableCell sx={{
-                                    fontWeight: 'bold', fontSize: 16, color: '#555', textTransform: 'uppercase'
-                                }} align="right">Surveys This Week</TableCell>
+                                    fontWeight: 'bold', fontSize: 16, color: '#555', textTransform: 'uppercase'}} align="right">Surveys This Week</TableCell>
                                 {/* Search input  <input style={{ width: 160 }} type="text"  value={searchValue} onChange={handleSearch} /> */}
-
+                            
                             </TableRow>
                         </TableHead>
                         <TableBody>

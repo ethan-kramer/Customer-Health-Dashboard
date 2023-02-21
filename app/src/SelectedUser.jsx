@@ -2,6 +2,8 @@
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import './SelectedUser.css';
+import Typography from '@mui/material/Typography';
+
 
 const SelectedUser = (props) => {
 
@@ -10,50 +12,54 @@ const SelectedUser = (props) => {
    
 
     return (
-        <div className="selected-user-container">
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="/">
-                    Home
-                </Link>
-                <Link color="inherit" href="/parentUsers">
-                    {parentUsers}
-                </Link>
-                <Link color="text.primary" aria-current="page" href="/selectedUser">
-                    Selected User
-                </Link>
-            </Breadcrumbs>
-            <h3 className="customer-health-heading">Customer Health:</h3>
-            <p className="parent-user-text">{parentUsers}</p>
-            <table className="data-table">
-                <thead>
-                    <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                        <th>Column 3</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Row 1</td>
-                        <td>Row 1</td>
-                        <td>Row 1</td>
-                    </tr>
-                    <tr>
-                        <td>Row 2</td>
-                        <td>Row 2</td>
-                        <td>Row 2</td>
-                    </tr>
-                    <tr>
-                        <td>Row 3</td>
-                        <td>Row 3</td>
-                        <td>Row 3</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div>
+            <div className="customer-health-heading">
+                <h2>{parentUsers}</h2>
+            </div>
+            <div>
+                <Breadcrumbs
+                    aria-label="breadcrumb"
+                    className="my-breadcrumbs"
+                    separator={<Typography variant="body2" color="textSecondary">{'>'}</Typography>}>
+                    <Link color="inherit" href="/">
+                        Home
+                    </Link>
+                    <Link color="inherit" href="/parentUsers">
+                        {parentUsers}
+                    </Link>
+                </Breadcrumbs>
+            </div>
+            <div class="container">
+                <div class="selected-user-container">
+                    <table class="data-table left-table">
+                        <thead>
+                            <h2>Avg. Star Rating</h2>
+                            <tr>
+                                <th>Column 1</th>
+                                <th>Column 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Row 1</td>
+                                <td>Row 1</td>
+                            </tr>
+                            <tr>
+                                <td>Row 2</td>
+                                <td>Row 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="selected-user-container">
+                    <h2>Last Week's Reviews</h2>
+                    <div class="circle"></div>
 
+                </div>
+            </div>
         </div>
-
     );
+
 }
 
 export default SelectedUser;
