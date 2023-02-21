@@ -46,6 +46,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return userDtos;
         }
 
+        
         [HttpGet("/api/v1/parentusers/{parentUserId:INT}/childusers")]
         public List<UserInfoDto> GetChildUsers(int parentUserId)
         {
@@ -64,9 +65,100 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return userDtos;
         }
 
+
         
-        // getting testimonials for selected parent user
-        [HttpGet("/api/v1/data/{ActualUserID}/testimonials")]
+        [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")]                     // not defining ActualUserIDs as INT like John bc they are null a lot
+        public List<TestimonialsDto> GetUserTestimonialCount(int ActualUserID)
+        {
+            var testimonialsDtos = new List<TestimonialsDto>();
+
+            var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
+
+
+            string query = 
+                "SELECT COUNT(Testimonial) as totalReviews" +
+                "FROM Testimonials" +
+                "GROUP BY ActualUserID;";
+
+            var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
+
+            foreach (var dbResult in dbResults)
+            {
+                //build the dtos here that you will send to the front end
+                var testimonialsDto = GetTestimonialsDto(dbResult);
+                testimonialsDtos.Add(testimonialsDto);
+            }
+            return testimonialsDtos;
+        }
+
+        // for potential weekly average: num testimonials by week for parent users
+        [HttpGet("/api/v1/data/{ActualUserID}/weeklytestimonials")]
+        public List<TestimonialsDto> GetWeeklyTestimonials(int ActualUserID)
+        {
+            var testimonialsDtos = new List<TestimonialsDto>();
+
+            var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
+
+
+            string query = 
+                "SELECT ActualUserID, count(*) as num_reviews" +
+                "FROM TESTIMONIALS" +
+                "GROUP BY DATEPART(week, DATETIMESTAMP), ActualUserID;";
+
+            var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
+
+            foreach (var dbResult in dbResults)
+            {
+                //build the dtos here that you will send to the front end
+                var testimonialsDto = GetTestimonialsDto(dbResult);
+                testimonialsDtos.Add(testimonialsDto);
+            }
+            return testimonialsDtos;
+        }
+
+
+        // getting all user information for any that had < 20 reviews in a given week
+        [HttpGet("/api/v1/data/{ActualUserID}/badweeklytestimonials")]
+        public List<TestimonialsDto> GetBadWeeklyCounts(int ActualUserID)
+        {
+            var testimonialsDtos = new List<TestimonialsDto>();
+
+            var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
+
+
+            string query =
+                "WITH CTE AS (" +
+                    "SELECT" +
+                        "ActualUserId," +
+                        "DATEPART(week, DATETIMESTAMP) as [WeekNumber]," +
+                        "COUNT(*) AS [NumberOfTestimonials]" +
+                    "FROM Testimonials T" +
+                    "GROUP BY ActualUserId, DATEPART(week, DateTimestamp)" +
+                    ")" +
+                    "SELECT UI.*" +
+                "FROM CTE" +
+                "LEFT JOIN UserInfo UI ON UI.UserID = CTE.ActualUserID" +
+                "WHERE CTE.NumberOfTestimonials < 20;";
+
+            var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
+
+            foreach (var dbResult in dbResults)
+            {
+                //build the dtos here that you will send to the front end
+                var testimonialsDto = GetTestimonialsDto(dbResult);
+                testimonialsDtos.Add(testimonialsDto);
+            }
+            return testimonialsDtos;
+        }
+
+
+
+        // NEED TO INSERT MORE DUMMY DATA TO BE ABLE TO TRY AND TEST NUMTESTIMONIALS THIS WEEK
+
+
+
+        // james' query
+        [HttpGet("/api/v1/data/{ActualUserID}/jamesquery")]
         public List<TestimonialsDto> GetUserTestimonials(int ActualUserID)
         {
             var testimonialsDtos = new List<TestimonialsDto>();
@@ -74,7 +166,8 @@ namespace CustomerHealthDashboardWebApi.Controllers
             var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
 
             
-            string query = "WITH CTE AS (" +
+            string query = 
+                "WITH CTE AS (" +
                 "SELECT" +
                 "ActualUserId," +
                 "DATEPART(YEAR, DateTimeStamp) AS [Year]," +
@@ -89,7 +182,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
                 "LEFT JOIN UserInfo UI ON UI.UserID = CTE.ActualUserID" +
                 "WHERE CTE.NumberOfTestimonials > 5;";
 
-            var dbResults = _dbContext.Testimonials.FromSqlRaw(query).ToList();
+            var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
 
             foreach (var dbResult in dbResults)
             {
@@ -100,7 +193,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialsDtos;
         }
         
-        
+
         private UserInfoDto GetUserInfoDto(Data.UserInfo dataUserInfo)
         {
             //This maps the db model to the dto you will send to the front end
