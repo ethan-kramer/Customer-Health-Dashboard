@@ -5,11 +5,6 @@ namespace CustomerHealthDashboardWebApi.Data
 {
     public partial class Testimonials
     {
-        public Testimonials()
-        {
-            InverseParent = new HashSet<Testimonials>();    // what is this for?
-        }
-
         public int TestimonialID { get; set; }
         public int UserID{ get; set; }
         public string Signature { get; set; }
@@ -44,7 +39,5 @@ namespace CustomerHealthDashboardWebApi.Data
         public string ReScrape { get; set; }
         public string ThirdPartySiteDataID { get; set; }        // end of tuples
 
-        public virtual Testimonials Parent { get; set; }    // should this be deleted or changed to something else?
-        public virtual ICollection<Testimonials> InverseParent { get; set; }    // ""
     }
 }
