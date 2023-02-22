@@ -7,7 +7,8 @@ namespace CustomerHealthDashboardWebApi.Data
     {
         public UserInfo()
         {
-            InverseParent = new HashSet<UserInfo>();        // what is this for?
+            InverseParent = new HashSet<UserInfo>();
+            Testimonials = new HashSet<Testimonials>();
         }
 
         public int UserId { get; set; }
@@ -153,5 +154,6 @@ namespace CustomerHealthDashboardWebApi.Data
 
         public virtual UserInfo Parent { get; set; }
         public virtual ICollection<UserInfo> InverseParent { get; set; }
+        public virtual ICollection<Testimonials> Testimonials { get; set; }
     }
 }

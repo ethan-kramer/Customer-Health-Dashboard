@@ -15,13 +15,19 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
+         "Name": "[dbo].[Testimonials]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[UserInfo]",
          "ObjectType": 0
       }
    ],
-   "UiHint": "EC2AMAZ-GPOTBM5.TestimonialTree",
+   "UiHint": "EC2AMAZ-T1B4938.TestimonialTree",
+   "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
    "UseDbContextSplitting": false,
    "UseFluentApiOnly": true,
    "UseHandleBars": true,
@@ -29,9 +35,7 @@
    "UseInflector": false,
    "UseLegacyPluralizer": false,
    "UseManyToManyEntity": false,
-   "UseNoConstructor": false,
    "UseNoDefaultConstructor": false,
-   "UseNoNavigations": false,
    "UseNoObjectFilter": false,
    "UseNodaTime": false,
    "UseNullableReferences": false,
