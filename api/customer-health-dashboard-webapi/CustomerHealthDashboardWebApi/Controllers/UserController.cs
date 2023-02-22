@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.DataProtection;
+using CustomerHealthDashboardWebApi.Util;
 
 namespace CustomerHealthDashboardWebApi.Controllers
 {
@@ -68,27 +70,32 @@ namespace CustomerHealthDashboardWebApi.Controllers
 
         
         [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")]                     // not defining ActualUserIDs as INT like John bc they are null a lot
-        public List<TestimonialsDto> GetUserTestimonialCount(int ActualUserID)
+        public int GetUserTestimonialCount(int ActualUserID)
         {
-            var testimonialsDtos = new List<TestimonialsDto>();
+            var testimonialCount = 0;
 
             var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
 
 
             string query = 
-                "SELECT COUNT(Testimonial) as totalReviews" +
-                "FROM Testimonials" +
-                "GROUP BY ActualUserID;";
+                " SELECT COUNT(Testimonial) as totalReviews" +
+                " FROM Testimonials WHERE ActualUserID = " + ActualUserID.ToString();
+                //" GROUP BY ActualUserID;";
 
-            var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
+            var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
 
-            foreach (var dbResult in dbResults)
+            foreach (Dictionary<string, object> dbResult in dbResults)
             {
-                //build the dtos here that you will send to the front end
-                var testimonialsDto = GetTestimonialsDto(dbResult);
-                testimonialsDtos.Add(testimonialsDto);
+               object value;
+               dbResult.TryGetValue("totalReviews", out value);
+                if (value != null)
+                {
+                    testimonialCount = (int)value;
+                }
+              
+
             }
-            return testimonialsDtos;
+            return testimonialCount;
         }
 
         // for potential weekly average: num testimonials by week for parent users
@@ -213,8 +220,10 @@ namespace CustomerHealthDashboardWebApi.Controllers
         private TestimonialsDto GetTestimonialsDto(Data.Testimonials dataTestimonials)
         {
             var testimonialsDto = new TestimonialsDto();
-            testimonialsDto.ActualUserID = dataTestimonials.ActualUserID;
+            //testimonialsDto.ActualUserID = dataTestimonials.ActualUserID;
             testimonialsDto.DateTimeStamp = dataTestimonials.DateTimeStamp;
+
+            return testimonialsDto;
         }
     }
 }
