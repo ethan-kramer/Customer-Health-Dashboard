@@ -15,10 +15,10 @@ function App() {
   };
 
   const poorMansRouter = () => {
-    if (selectedUser) {
-      return <UserPage user={selectedUser} onClearUser={handleClearUser} />;
+    if (selectedUser) { // if user selected
+      return <UserPage user={selectedUser} onClearUser={handleClearUser} />; // return user page with that user passed to it and clear it 
     } else {
-      return <UserListPage onUserSelected={handleUserSelected} />;
+      return <UserListPage onUserSelected={handleUserSelected} />; // otherwise, user not selected, return the table 
     }
   };
 

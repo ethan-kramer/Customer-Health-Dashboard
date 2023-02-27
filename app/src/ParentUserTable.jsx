@@ -8,6 +8,8 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import { useEffect, useState } from 'react';
 
+import './ParentUserTable.css'
+
 const ParentUserTable = ({ onUserSelected }) => {
   const [parentUsers, setParentUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,57 +63,46 @@ const ParentUserTable = ({ onUserSelected }) => {
           };*/
 
   return (
-    <div>
-      {parentUsers.length > 0 ? ( // if there are parent users then display table
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} size="small" aria-label="custom pagination table">
-            <TableHead>
-              <TableRow sx={{ backgroundColor: '#B6D770' }}>
-                <TableCell sx={{ fontWeight: 'bold', fontSize: 16, color: '#555', textTransform: 'uppercase' }}>
-                  Company
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: 'bold',
-                    fontSize: 16,
-                    color: '#555',
-                    textTransform: 'uppercase',
-                  }}
-                  align="right"
-                >
-                  Surveys This Week
-                </TableCell>
-                {/* Search input  <input style={{ width: 160 }} type="text"  value={searchValue} onChange={handleSearch} /> */}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {parentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
-                <TableRow
-                  key={parentUser.userId}
-                  onClick={() => handleTableRowClick(parentUser)}
-                  sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}
-                >
-                  <TableCell>{parentUser.username}</TableCell>
-                  <TableCell sx={{ paddingLeft: '3rem' }} align="right">
-                    156
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            component="div"
-            count={parentUsers.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </TableContainer>
-      ) : (
-        <div>No data</div>
-      )}
-    </div>
+      <div>
+          <div className="customer-health-heading">
+              <h1>Customer Health Dashboard</h1>
+          </div>
+          {parentUsers.length > 0 ? (
+              <TableContainer className="parent-table" component={Paper}>
+                  <Table size="small" aria-label="custom pagination table">
+                      <TableHead>
+                          <TableRow>
+                              <TableCell>Company</TableCell>
+                              <TableCell align="right">Surveys This Week</TableCell>
+                          </TableRow>
+                      </TableHead>
+                      <TableBody>
+                          {parentUsers
+                              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                              .map((parentUser) => (
+                                  <TableRow
+                                      key={parentUser.userId}
+                                      onClick={() => handleTableRowClick(parentUser)}
+                                  >
+                                      <TableCell>{parentUser.username}</TableCell>
+                                      <TableCell align="right">156</TableCell>
+                                  </TableRow>
+                              ))}
+                      </TableBody>
+                  </Table>
+                  <TablePagination
+                      component="div"
+                      count={parentUsers.length}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      rowsPerPage={rowsPerPage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+              </TableContainer>
+          ) : (
+              <div>No data</div>
+          )}
+      </div>
   );
 };
 export default ParentUserTable;

@@ -1,0 +1,28 @@
+﻿.parent-table {
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+    .parent-table thead tr {
+        background-color: #B6D770;
+    }
+
+    .parent-table thead td {
+        font-weight: bold;
+        font-size: 16px;
+        color: #555;
+        text-transform: uppercase;
+    }
+
+        .parent-table thead td:last-child {
+            text-align: right;
+        }
+
+    .parent-table tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+.customer-health-heading h1 {
+    font-size: 35px;
+    margin-bottom: 20px;
+}
