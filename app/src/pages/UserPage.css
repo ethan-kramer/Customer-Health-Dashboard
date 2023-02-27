@@ -15,48 +15,70 @@
     align-items: center;
 }
 
-
-.circle {
-    width: 200px;
-    height: 145px;
-    border-radius: 50%;
-    background-color: #B6D770;
-    display: inline-flex;
-
-}
-
 .parent-user-text {
-    font-size: 18px;
+    font-size: 28px;
     margin-bottom: 20px;
+    font-family: 'Open Sans', sans-serif;
 }
 
-
-/* Fake data table just for visualization*/
-.data-table {
-    border-collapse: collapse;
-    width: 100%;
+.customer-health-heading {
+    font-size: 35px;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
     margin-bottom: 20px;
-}
-
-.data-table th,
-.data-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
     text-align: left;
+    text-transform: capitalize;
 }
 
-.data-table th {
-    background-color: #B6D770;
-    color: #555;
-    font-weight: bold;
-    text-transform: uppercase;
+
+.card {
+    width: 25%;
+    max-width: 500px;
+    height: 300px;
+    border-radius: 8px;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    background-color: green;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    overflow: hidden; 
 }
 
-.data-table th.transparent {
-    background-color: transparent;
+@media screen and (max-width: 768px) {
+    .card {
+        max-width: 300px;
+        height: 250px; 
+    }
 }
 
-.data-table tr:hover {
-    background-color: #ddd;
+@media screen and (max-width: 480px) {
+    .card {
+        max-width: 200px;
+        height: 200px;  
+    }
+}
+
+
+.media {
+    height: 250px;
+    object-fit: cover;
+}
+
+.title {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #757575;
+    margin-bottom: 16px;
+}
+
+.description {
+    flex-grow: 1;
+    margin-bottom: 16px;
 }
 

@@ -7,7 +7,7 @@ export default function UserListPage({ onUserSelected }) {
         onUserSelected={onUserSelected}
         //  parentUsers={parentUsers}
         //  parentUserSelected={(parentUsers) => setSelectedParentUser(parentUsers)}
-      ></ParentUserTable>
+          ></ParentUserTable>
     </div>
   );
 }
