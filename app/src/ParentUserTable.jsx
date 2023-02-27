@@ -8,6 +8,17 @@ import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
 import { useEffect, useState } from 'react';
 
+import * as React from 'react';
+import { styled, alpha } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import InputBase from '@mui/material/InputBase';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+
 const ParentUserTable = ({ onUserSelected }) => {
   const [parentUsers, setParentUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -48,70 +59,114 @@ const ParentUserTable = ({ onUserSelected }) => {
   }
 
   // create a SearchBar component
-  /*  const SearchBar = ({ value, onChange }) => {
-              return (
-                  <input
-                      style={{ width: '50%', paddingBottom: '0.5rem' }}
-                      type="text"
-                      value={value}
-                      placeholder="Search"
-                      onChange={onChange}
-                  />
-              );
-          };*/
+    const Search = styled('div')(({ theme }) => ({
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    }));
 
-  return (
-    <div>
-      {parentUsers.length > 0 ? ( // if there are parent users then display table
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} size="small" aria-label="custom pagination table">
-            <TableHead>
-              <TableRow sx={{ backgroundColor: '#B6D770' }}>
-                <TableCell sx={{ fontWeight: 'bold', fontSize: 16, color: '#555', textTransform: 'uppercase' }}>
-                  Company
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: 'bold',
-                    fontSize: 16,
-                    color: '#555',
-                    textTransform: 'uppercase',
-                  }}
-                  align="right"
-                >
-                  Surveys This Week
-                </TableCell>
-                {/* Search input  <input style={{ width: 160 }} type="text"  value={searchValue} onChange={handleSearch} /> */}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {parentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
-                <TableRow
-                  key={parentUser.userId}
-                  onClick={() => handleTableRowClick(parentUser)}
-                  sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}
-                >
-                  <TableCell>{parentUser.username}</TableCell>
-                  <TableCell sx={{ paddingLeft: '3rem' }} align="right">
-                    156
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            component="div"
-            count={parentUsers.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </TableContainer>
-      ) : (
-        <div>No data</div>
-      )}
-    </div>
-  );
+    const SearchIconWrapper = styled('div')(({ theme }) => ({
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }));
+
+    const StyledInputBase = styled(InputBase)(({ theme }) => ({
+        color: 'inherit',
+        '& .MuiInputBase-input': {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                width: '12ch',
+                '&:focus': {
+                    width: '20ch',
+                },
+            },
+        },
+    }));
+
+
+
+    return (
+        <div>
+            {parentUsers.length > 0 ? ( // if there are parent users then display table
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} size="small" aria-label="custom pagination table">
+                        <TableHead>
+                            <TableRow sx={{ backgroundColor: '#B6D770' }}>
+                                <TableCell sx={{ fontWeight: 'bold', fontSize: 16, color: '#555', textTransform: 'uppercase' }}>
+                                    Company
+                                </TableCell>
+                                <TableCell>
+                                    <Search>
+                                        <SearchIconWrapper>
+                                            <SearchIcon />
+                                        </SearchIconWrapper>
+                                        <StyledInputBase
+                                            placeholder="Search…"
+                                            inputProps={{ 'aria-label': 'search' }}
+                                        />
+                                    </Search>
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        fontSize: 16,
+                                        color: '#555',
+                                        textTransform: 'uppercase',
+                                    }}
+                                    align="right"
+                                >
+                                    Surveys This Week
+                                </TableCell>
+                                
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {parentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
+                                <TableRow
+                                    key={parentUser.userId}
+                                    onClick={() => handleTableRowClick(parentUser)}
+                                    sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}
+                                >
+                                    <TableCell>{parentUser.username}</TableCell>
+                                    <TableCell sx={{ paddingLeft: '3rem' }} align="right">
+                                        156
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        component="div"
+                        count={parentUsers.length}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </TableContainer>
+            ) : (
+                <div>No data</div>
+            )}
+        </div>
+    )
+ 
 };
 export default ParentUserTable;
