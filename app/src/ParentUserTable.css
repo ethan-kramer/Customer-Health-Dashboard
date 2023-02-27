@@ -1,28 +1,44 @@
 ﻿.parent-table {
-    max-width: 750px;
+    max-width: 75%;
     margin: 0 auto;
+    overflow-x: auto;
 }
 
-    .parent-table thead tr {
-        background-color: #B6D770;
+
+.table-header {
+    font-size: 10px;
+    margin-bottom: 20px;
+    color: #685959;
+    text-transform: uppercase;
+    padding: 0;
+}
+
+
+.table-cell {
+    display: flex;
+    align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+    .parent-table {
+        max-width: 100%;
+    }
+
+    .table-header h4 {
+        font-size: 16px;
+        margin-bottom: 10px;
     }
 
     .parent-table thead td {
-        font-weight: bold;
-        font-size: 16px;
-        color: #555;
-        text-transform: uppercase;
+        font-size: 14px;
     }
-
-        .parent-table thead td:last-child {
-            text-align: right;
-        }
-
-    .parent-table tbody tr:hover {
-        background-color: #f5f5f5;
-    }
-
-.customer-health-heading h1 {
-    font-size: 35px;
-    margin-bottom: 20px;
 }
+
+.customer-health-heading {
+    font-size: 2rem;
+    text-align: center;
+    color: #333;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+

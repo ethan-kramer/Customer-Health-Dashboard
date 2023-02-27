@@ -64,11 +64,12 @@ const ParentUserTable = ({ onUserSelected }) => {
         marginLeft: 0,
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
-            width: 'auto',
+            marginLeft: theme.spacing(60),
+            width: '50%',
         },
     }));
 
+    // Searchbar Icon
     const SearchIconWrapper = styled('div')(({ theme }) => ({
         padding: theme.spacing(0, 2),
         height: '100%',
@@ -79,6 +80,7 @@ const ParentUserTable = ({ onUserSelected }) => {
         justifyContent: 'center',
     }));
 
+    // Searchbar Input
     const StyledInputBase = styled(InputBase)(({ theme }) => ({
         color: 'inherit',
         '& .MuiInputBase-input': {
@@ -88,7 +90,7 @@ const ParentUserTable = ({ onUserSelected }) => {
             transition: theme.transitions.create('width'),
             width: '100%',
             [theme.breakpoints.up('sm')]: {
-                width: '12ch',
+                width: '20ch',
                 '&:focus': {
                     width: '20ch',
                 },
@@ -98,15 +100,16 @@ const ParentUserTable = ({ onUserSelected }) => {
 
     return (
         <div>
+            <div className="customer-health-heading">
+                Customer Health Dashboard
+            </div>
             {parentUsers.length > 0 ? ( // if there are parent users then display table
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} size="small" aria-label="custom pagination table">
+                <TableContainer className="parent-table" component={Paper}>
+                    <Table size="small" aria-label="custom pagination table">
                         <TableHead>
-                            <TableRow sx={{ backgroundColor: '#B6D770' }}>
-                                <TableCell sx={{ fontWeight: 'bold', fontSize: 16, color: '#555', textTransform: 'uppercase' }}>
-                                    Company
-                                </TableCell>
-                                <TableCell>
+                            <TableRow className="table-header" sx={{ backgroundColor: '#B6D770' }}> 
+                                <TableCell sx={{ fontWeight:'bold', alignItems:'center', display: 'flex' }}>
+                                    Company   
                                     <Search>
                                         <SearchIconWrapper>
                                             <SearchIcon />
@@ -117,18 +120,6 @@ const ParentUserTable = ({ onUserSelected }) => {
                                         />
                                     </Search>
                                 </TableCell>
-                                <TableCell
-                                    sx={{
-                                        fontWeight: 'bold',
-                                        fontSize: 16,
-                                        color: '#555',
-                                        textTransform: 'uppercase',
-                                    }}
-                                    align="right"
-                                >
-                                    Surveys This Week
-                                </TableCell>
-                                
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -138,10 +129,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                                     onClick={() => handleTableRowClick(parentUser)}
                                     sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}
                                 >
-                                    <TableCell>{parentUser.username}</TableCell>
-                                    <TableCell sx={{ paddingLeft: '3rem' }} align="right">
-                                        156
-                                    </TableCell>
+                                    <TableCell>{parentUser.username}</TableCell>                   
                                 </TableRow>
                             ))}
                         </TableBody>
