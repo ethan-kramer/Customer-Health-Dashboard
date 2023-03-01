@@ -36,65 +36,81 @@ export default function UserPage({ user, onClearUser }) {
           </div>
             {/* Stats Cards */}
           <div style={{ display: 'flex' }}>
-                <Card className="card" style={{ backgroundColor: '#B6D770' }}>
-                    <CardMedia
-                        className="media"
-                        image="https://picsum.photos/400/300"
-                        title="75"
-                        href=""
-                    />
-                  <CardContent className="content">
-                      <Typography variant="h5" component="h2" className="title">
-                          Average Star Rating
-                      </Typography>
-                      <Typography variant="subtitle1" className="subtitle">
-                        
-                      </Typography>
-                      <Typography variant="body1" className="description">
-                          
-                      </Typography>
+                <Card className="card" style={{ borderRadius: '20px', backgroundColor: '#0080001c' }}>
+                    <CardContent className="content" style={{} }>
+                        <Typography variant="h1" className="card-info">
+                            75
+                        </Typography>
+                        <Typography variant="h5" component="h2" className="title">
+                            Average Star Rating
+                        </Typography>
                     </CardContent>
-           
-              </Card>
+                </Card>
 
-                <Card className="card" style={{ backgroundColor: '#B6D770' }}>
+                <Card className="card" style={{ borderRadius: '20px',backgroundColor: '#f9f9f9' }}>
+                    <CardContent className="content" style={{ }}>
+                        <Typography variant="h1" className="card-info">
+                            20
+                        </Typography>
+                        <Typography variant="h5" component="h2" className="title">
+                            Last Week's Reviews
+                        </Typography>
+                    </CardContent>
+                </Card>
+
+                <Card className="card" style={{ borderRadius: '20px', backgroundColor: '#f100001a' }}>
+                    <CardContent className="content" style={{  }}>
+                        <Typography variant="h1" className="card-info">
+                            50%
+                        </Typography>
+                        <Typography variant="h5" component="h2" className="title">
+                            Overall Health
+                        </Typography>
+                    </CardContent>
+                </Card>
+
+            </div>
+            <div style={{ display: 'flex' }}>
+
+                <Card className="chart-card" style={{ borderRadius: '50px', width: '55%', backgroundColor: '#f9f9f9' }}>
                     <CardMedia
                         className="media"
-                        image="https://picsum.photos/500/300"
+                        image=""
                         title=""
                     />
-                  <CardContent className="content">
-                      <Typography variant="h5" component="h2" className="title">
-                         Review's Last Week
-                      </Typography>
-                      <Typography variant="subtitle1" className="subtitle">
-                         
-                      </Typography>
-                      <Typography variant="body1" className="description">
-                          
-                      </Typography>
+                    <CardContent className="content">
+                        <Typography variant="h5" component="h3" className="title">
+                            Overall Trend
+                        </Typography>
+                        <Typography variant="subtitle1" className="subtitle">
+
+                        </Typography>
+                        <Typography variant="body1" className="description">
+
+                        </Typography>
                     </CardContent>
-              </Card>
-                <Card className="card" style={{ backgroundColor: '#B6D770' }}>
+                </Card>
+
+                <Card className="chart-card" style={{ borderRadius: '50px', width: '25%', backgroundColor: '#f9f9f9' }}>
                     <CardMedia
                         className="media"
-                        image="https://picsum.photos/600/300"
+                        image=""
                         title=""
                     />
-                  <CardContent className="content">
-                      <Typography variant="h5" component="h3" className="title">
-                          Overall Trend
-                      </Typography>
-                      <Typography variant="subtitle1" className="subtitle">
-                        
-                      </Typography>
-                      <Typography variant="body1" className="description">
-                         
-                      </Typography>
+                    <CardContent className="content">
+                        <Typography variant="h5" component="h3" className="title">
+                            Another Chart
+                        </Typography>
+                        <Typography variant="subtitle1" className="subtitle">
+
+                        </Typography>
+                        <Typography variant="body1" className="description">
+
+                        </Typography>
                     </CardContent>
-                
-              </Card>
+                </Card>
+                </div>
           </div>
-</div>
+
   );
 }
