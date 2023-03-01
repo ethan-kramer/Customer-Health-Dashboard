@@ -7,6 +7,7 @@ namespace CustomerHealthDashboardWebApi.Data
 {
     public partial class TestimonialTreeContext : DbContext
     {
+        public virtual DbSet<Testimonials> Testimonials { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
 
         public TestimonialTreeContext(DbContextOptions<TestimonialTreeContext> options) : base(options)
@@ -15,6 +16,136 @@ namespace CustomerHealthDashboardWebApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Testimonials>(entity =>
+            {
+                entity.HasKey(e => e.TestimonialId);
+
+                entity.HasIndex(e => new { e.Rating, e.Deleted }, "<Name of Missing Index, sysname,>")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => e.ActualUserId, "ActualUser_ID");
+
+                entity.HasIndex(e => e.UserId, "User_ID")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => e.DateTimeStamp, "idxDateIdUserRating")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => e.DateTimeStamp, "idxDateTimeStamp")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => e.Deleted, "idxDeleted")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => e.Rating, "idxRating")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => e.RequestId, "idxRequestID")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => e.ShowToPublic, "idxShowToPublic")
+                    .HasFillFactor(80);
+
+                entity.HasIndex(e => new { e.DateTimeStamp, e.Deleted }, "idxTestimonialDate1");
+
+                entity.Property(e => e.TestimonialId).HasColumnName("TestimonialID");
+
+                entity.Property(e => e.ActualUserId).HasColumnName("ActualUserID");
+
+                entity.Property(e => e.ClientIsSpam)
+                    .HasColumnName("clientIsSpam")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.ClientIsValid)
+                    .HasColumnName("clientIsValid")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.DateTimeStamp).HasColumnType("datetime");
+
+                entity.Property(e => e.Deleted)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ExternalSource)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FacebookLiked)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FavoriteLevel).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Helpfulness).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.LastUpdated).HasColumnType("datetime");
+
+                entity.Property(e => e.LastUpdatedUsername)
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
+                    .HasColumnName("lastUpdatedUsername");
+
+                entity.Property(e => e.Oldtestimonialid).HasColumnName("oldtestimonialid");
+
+                entity.Property(e => e.OriginalClientIp)
+                    .HasMaxLength(45)
+                    .IsUnicode(false)
+                    .HasColumnName("originalClientIP");
+
+                entity.Property(e => e.OriginalClientReferrer)
+                    .HasMaxLength(1024)
+                    .IsUnicode(false)
+                    .HasColumnName("originalClientReferrer");
+
+                entity.Property(e => e.Rating)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Relationship).HasMaxLength(200);
+
+                entity.Property(e => e.RequestId).HasColumnName("requestID");
+
+                entity.Property(e => e.ShowToPublic)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Signature).HasMaxLength(200);
+
+                entity.Property(e => e.SignatureNvarChar)
+                    .HasMaxLength(256)
+                    .HasColumnName("SignatureNVarChar");
+
+                entity.Property(e => e.Source)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SpamRating).HasColumnName("spamRating");
+
+                entity.Property(e => e.SystemIsSpam).HasColumnName("systemIsSpam");
+
+                entity.Property(e => e.TestimonialStatusId).HasColumnName("TestimonialStatusID");
+
+                entity.Property(e => e.TestimonialVideo)
+                    .HasMaxLength(2048)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ThirdPartySiteDataId).HasColumnName("ThirdPartySiteDataID");
+
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
+                    .HasColumnName("UserID");
+
+                entity.HasOne(d => d.ActualUser)
+                    .WithMany(p => p.Testimonials)
+                    .HasForeignKey(d => d.ActualUserId)
+                    .HasConstraintName("fk_actual_user_id");
+            });
+
             modelBuilder.Entity<UserInfo>(entity =>
             {
                 entity.HasKey(e => e.UserId);

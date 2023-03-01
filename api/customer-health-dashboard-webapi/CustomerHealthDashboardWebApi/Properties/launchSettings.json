@@ -3,7 +3,7 @@
     "CustomerHealthDashboardWebApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/v1/parentusers",
+      "launchUrl": "api/v1/data/3/testimonialcount",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

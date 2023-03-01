@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+
+        window.onload = function () {
+            var qsParamName = 'uid';
+            var redirectPageName = 'stage.aspx';
+            var url = window.location.href;
+            if (url.toLowerCase().indexOf(redirectPageName.toLowerCase()) == -1) {
+                //if not on stage.aspx
+                if (url.indexOf('?' + qsParamName + '=') != -1) {
+
+                    var queryString = url.slice(url.indexOf('?') + 1);
+                    var redirectUrl = '/' + redirectPageName + '?' + queryString;
+                    window.location.href = redirectUrl
+
+                }
+            }
+            
+
+        }
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
