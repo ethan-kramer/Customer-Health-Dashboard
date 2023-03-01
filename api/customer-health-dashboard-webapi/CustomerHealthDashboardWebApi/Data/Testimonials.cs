@@ -7,6 +7,7 @@ namespace CustomerHealthDashboardWebApi.Data
     {
         public int TestimonialId { get; set; }
         public string UserId { get; set; }
+        public string ActualUserID { get; set; }
         public string Signature { get; set; }
         public string Email { get; set; }
         public string Testimonial { get; set; }
