@@ -98,7 +98,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialCount;
         }
 
-        // for potential weekly average: num testimonials by week for parent users
+        // num testimonials by week for parent users
         [HttpGet("/api/v1/data/{ActualUserID}/weeklytestimonials")]
         public List<TestimonialsDto> GetWeeklyTestimonials(int ActualUserID)
         {
@@ -123,6 +123,65 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialsDtos;
         }
 
+        // weekly average in progress
+        // once we have weekly average and in the last week, we should be able to compare the two in javascript
+        [HttpGet("/api/v1/data/{ActualUserID}/weeklyaverage")]
+        public int GetWeeklyAverage(int ActualUserID)
+        {
+            var weeklyAverage = -1;
+
+            string query =
+                "WITH UserTestimonials AS (" +
+                    "SELECT ActualUserID, DATEPART(week, DATETIMESTAMP) AS SpecificWeek, COUNT(*) AS NumReviews" +
+                    "FROM TESTIMONIALS" +
+                    "WHERE ActualUserID = " + ActualUserID.ToString() +
+                    "GROUP BY ActualUserID, DATEPART(week, DATETIMESTAMP)" +
+                    ") " +
+                "SELECT AVG(NumReviews) AS WeeklyAverage" +
+                "FROM UserTestimonials;";
+
+            var result = _dbContext.Testimonials.FromSqlRaw(query).FirstOrDefault();
+
+            if (result != null)
+            {
+                weeklyAverage = (int)result.WeeklyAverage;
+            }
+
+            return weeklyAverage;
+        }
+
+        /*
+ *      Calculating avg outside of query
+ *      
+        public int GetWeeklyAverage(int ActualUserID)
+        {
+            int weeklyAverage = 0;
+
+            string query =
+                "SELECT ActualUserID, DATEPART(week, DATETIMESTAMP) AS SpecificWeek, COUNT(*) AS NumReviews " +
+                "FROM TESTIMONIALS " +
+                "WHERE ActualUserID = " + ActualUserID.ToString() +
+                "GROUP BY DATEPART(week, DATETIMESTAMP), ActualUserID;";
+
+            var dbResults = _dbContext.Testimonials.FromSqlRaw(query);
+
+            var weeklyTestimonials = dbResults.Select(record => new
+            {
+                UserId = record.ActualUserID,
+                TotalCount = record.NumReviews,
+                Week = record.SpecificWeek
+            });
+
+            int weekCount = weeklyTestimonials.Select(record => record.Week).Distinct().Count();
+
+            int totalCount = weeklyTestimonials.Sum(record => record.TotalCount);
+
+            weeklyAverage = (int)Math.Round((double)totalCount / weekCount);
+
+            return weeklyAverage;
+        }
+        */
+        
 
         // getting all user information for any that had < 20 reviews in a given week
         [HttpGet("/api/v1/data/{ActualUserID}/badweeklytestimonials")]
