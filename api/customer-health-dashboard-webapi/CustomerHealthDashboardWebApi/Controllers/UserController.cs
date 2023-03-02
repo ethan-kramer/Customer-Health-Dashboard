@@ -71,8 +71,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
         }
 
 
-        [HttpGet(
-            "/api/v1/data/{ActualUserID}/testimonialcount")] // not defining ActualUserIDs as INT like John bc they are null a lot
+        [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")] // not defining ActualUserIDs as INT like John bc they are null a lot
         public int GetUserTestimonialCount(int ActualUserID)
         {
             var testimonialCount = 0;
