@@ -71,19 +71,15 @@ namespace CustomerHealthDashboardWebApi.Controllers
         }
 
 
-        [HttpGet(
-            "/api/v1/data/{ActualUserID}/testimonialcount")] // not defining ActualUserIDs as INT like John bc they are null a lot
+        [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")] 
         public int GetUserTestimonialCount(int ActualUserID)
         {
             var testimonialCount = 0;
 
-            var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
-
 
             string query =
-                " SELECT COUNT(Testimonial) as totalReviews" +
+                " SELECT COUNT(*) as totalReviews" +
                 " FROM Testimonials WHERE ActualUserID = " + ActualUserID.ToString();
-            //" GROUP BY ActualUserID;";
 
             var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
 
@@ -100,21 +96,33 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialCount;
         }
 
-        // num testimonials by week for parent users
+        // IN PROGRESS
+        // num surveys sent/received by week for specific user
         [HttpGet("/api/v1/data/{ActualUserID}/weeklytestimonials")]
-        public List<TestimonialsDto> GetWeeklyTestimonials(int ActualUserID)
+        public List<TestimonialsDto> GetSurveysSentAndReceived(int ActualUserID)
         {
             var testimonialsDtos = new List<TestimonialsDto>();
 
+            string query =
+                " SELECT" +
+                " UserInfo.Username," +
+                " COUNT(surveyRequests.RequestID) AS TotalSurveyRequestsSent," +
+                " COUNT(surveyTaken.id) AS TotalSureveysTaken," +
+                " DATEPART(week, DATETIMESTAMP) AS SpecificWeek" +
+                " FROM UserInfo" +
+                " LEFT JOIN surveyRequests ON UserInfo.Username = surveyRequests.Username" +
+                " LEFT JOIN surveyTaken ON surveyTaken.surveyRequestID = surveyRequests.RequestID" +
+                " WHERE " +
+                " surveyRequests.DateTimeStamp > DATEADD(YEAR, -1, GETDATE()) AND " +
+                " surveyRequests.DateTimeStamp < GETDATE() AND" +
+                " (UserInfo.Deleted IS NULL OR UserInfo.Deleted = 'False' OR UserInfo.Deleted = '0') AND" +
+                " UserInfo.Username = 'wsbadcock'" +
+                " GROUP BY UserInfo.Username, DATEPART(week, DATETIMESTAMP)" +
+                " ORDER BY DATEPART(week, DATETIMESTAMP) ASC";
+
             var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
 
-
-            string query =
-                "SELECT ActualUserID, count(*) as num_reviews" +
-                "FROM TESTIMONIALS" +
-                "GROUP BY DATEPART(week, DATETIMESTAMP), ActualUserID;";
-
-            var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
+            var dbResults = _dbContext.ExecuteQueryAsDictionary(query).ToList();
 
             foreach (var dbResult in dbResults)
             {
@@ -126,19 +134,41 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialsDtos;
         }
 
-        // weekly average in progress
+        
+        // num testimonials last week for specific user
+        [HttpGet("/api/v1/data/{ActualUserID}/testimonialslastweek")]
+        public int GetTestimonialsLastWeek(int ActualUserID)
+        {
+            int testimonialsLastWeek = -1;
+
+
+            string query =
+                " SELECT ActualUserID, COUNT(*) AS NumReviews, DATEPART(week, GETDATE()) AS ThisWeek, DATEPART(week, DATEADD(week, -1, GETDATE())) as LastWeek" +
+                " FROM TESTIMONIALS" +
+                " WHERE DATEPART(week, DATETIMESTAMP) = DATEPART(week, DATEADD(week, -1, GETDATE())) AND ActualUserID = " + ActualUserID.ToString() +
+                " GROUP BY ActualUserID, DATEPART(week, DATETIMESTAMP);";
+
+            var dbResults = _dbContext.ExecuteQueryAsDictionary(query); // return as a dictionary
+
+            foreach (Dictionary<string, object> dbResult in dbResults)
+            {
+                object value;
+                dbResult.TryGetValue("NumReviews", out value);
+                if (value != null)
+                {
+                    testimonialsLastWeek = (int)value;
+                }
+            }
+
+            return testimonialsLastWeek;
+        }
+
+
         // once we have weekly average and in the last week, we should be able to compare the two in javascript
         [HttpGet("/api/v1/data/{ActualUserID}/weeklyaverage")]
         public int GetWeeklyAverage(int ActualUserID)
         {
-            /*
-             * TODO - read and then remove comment
-             * - when debugging the code, I inspected the value of `query` and noticed that it was malformed
-             *   for instances it out put something like `WHERE ActualuserId = 3GROUP BY`. If you notice `3GROUP BY` is
-             *   not valid sql.
-             * - notice now that I placed a space at the beginning of each line of the query string parts so that it would
-             *   ensure proper spacing and formatting.
-             */ 
+
             string query =
                 " WITH UserTestimonials AS (" +
                 " SELECT ActualUserID, DATEPART(week, DATETIMESTAMP) AS SpecificWeek, COUNT(*) AS NumReviews" +
@@ -149,15 +179,10 @@ namespace CustomerHealthDashboardWebApi.Controllers
                 " SELECT AVG(NumReviews) AS WeeklyAverage" +
                 " FROM UserTestimonials;";
 
-            // when the type returned does not match one of our defined data models such as User or Tesitimonial, then
-            // we need to use this helper method that Jon White wrote to return a dynamic dictionary, which we can use 
-            // to extract the calculated value
             var dbResults = _dbContext.ExecuteQueryAsDictionary(query); // return as a dictionary
 
             int weeklyAverage = -1;
 
-            // there should only be one record here, so it should get the first record and then grab it's WeeklyAverage
-            // output its value and then we return it later
             foreach (Dictionary<string, object> dbResult in dbResults)
             {
                 object value;
@@ -171,32 +196,39 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return weeklyAverage;
         }
 
-        /*
-         * Calculating avg outside of query
-         *
-         */
-        // public int GetWeeklyAverage(int ActualUserID)
-        // {
-        //     int weeklyAverage = 0;
-        //
-        //     string query =
-        //         "SELECT ActualUserID, DATEPART(week, DATETIMESTAMP) AS SpecificWeek, COUNT(*) AS NumReviews " +
-        //         "FROM TESTIMONIALS " +
-        //         "WHERE ActualUserID = " + ActualUserID.ToString() +
-        //         "GROUP BY DATEPART(week, DATETIMESTAMP), ActualUserID;";
-        //
-        //     var dbResults = _dbContext.Testimonials.FromSqlRaw(query);
-        //
-        //
-        //     int weekCount = weeklyTestimonials.Select(record => record.Week).Distinct().Count();
-        //
-        //     int totalCount = weeklyTestimonials.Sum(record => record.TotalCount);
-        //
-        //     weeklyAverage = (int)Math.Round((double)totalCount / weekCount);
-        //
-        //     return weeklyAverage;
-        // }
 
+        // average stars 
+        [HttpGet("/api/v1/data/{ActualUserID}/averagerating")]
+        public int GetAverageRating(int ActualUserID)
+        {
+
+            string query =
+                " WITH userRatings AS (" +
+                " SELECT ActualUserID, CAST(Rating AS int) as IntRating" +
+                " FROM Testimonials" +
+                " WHERE ActualUserID = " + ActualUserID.ToString() +
+                " GROUP BY ActualUserID, Rating" +
+                " )" +
+                " SELECT AVG(IntRating) as AverageRating" +
+                " From userRatings;";
+
+
+            var dbResults = _dbContext.ExecuteQueryAsDictionary(query); // return as a dictionary
+
+            int averageRating = -1;
+
+            foreach (Dictionary<string, object> dbResult in dbResults)
+            {
+                object value;
+                dbResult.TryGetValue("AverageRating", out value);
+                if (value != null)
+                {
+                    averageRating = (int)value;
+                }
+            }
+
+            return averageRating;
+        }
 
         // getting all user information for any that had < 20 reviews in a given week
         [HttpGet("/api/v1/data/{ActualUserID}/badweeklytestimonials")]
@@ -208,59 +240,18 @@ namespace CustomerHealthDashboardWebApi.Controllers
 
 
             string query =
-                "WITH CTE AS (" +
-                "SELECT" +
-                "ActualUserId," +
-                "DATEPART(week, DATETIMESTAMP) as [WeekNumber]," +
-                "COUNT(*) AS [NumberOfTestimonials]" +
-                "FROM Testimonials T" +
-                "GROUP BY ActualUserId, DATEPART(week, DateTimestamp)" +
-                ")" +
-                "SELECT UI.*" +
-                "FROM CTE" +
-                "LEFT JOIN UserInfo UI ON UI.UserID = CTE.ActualUserID" +
-                "WHERE CTE.NumberOfTestimonials < 20;";
-
-            var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
-
-            foreach (var dbResult in dbResults)
-            {
-                //build the dtos here that you will send to the front end
-                var testimonialsDto = GetTestimonialsDto(dbResult);
-                testimonialsDtos.Add(testimonialsDto);
-            }
-
-            return testimonialsDtos;
-        }
-
-
-        // NEED TO INSERT MORE DUMMY DATA TO BE ABLE TO TRY AND TEST NUMTESTIMONIALS THIS WEEK
-
-
-        // james' query
-        [HttpGet("/api/v1/data/{ActualUserID}/jamesquery")]
-        public List<TestimonialsDto> GetUserTestimonials(int ActualUserID)
-        {
-            var testimonialsDtos = new List<TestimonialsDto>();
-
-            var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
-
-
-            string query =
-                "WITH CTE AS (" +
-                "SELECT" +
-                "ActualUserId," +
-                "DATEPART(YEAR, DateTimeStamp) AS [Year]," +
-                "DATEPART(WEEK, DateTimestamp) AS [Week]," +
-                "COUNT(*) AS [NumberOfTestimonials]" +
-                "FROM Testimonials T " +
-                "WHERE DateTimeStamp > DATEADD(MONTH, -1, GETDATE())" +
-                "GROUP BY ActualUserId, DATEPART(YEAR, DateTimeStamp), DATEPART(WEEK, DateTimestamp)" +
-                ")" +
-                "SELECT UI.*" +
-                "FROM CTE" +
-                "LEFT JOIN UserInfo UI ON UI.UserID = CTE.ActualUserID" +
-                "WHERE CTE.NumberOfTestimonials > 5;";
+                " WITH CTE AS (" +
+                " SELECT" +
+                " ActualUserId," +
+                " DATEPART(week, DATETIMESTAMP) as [WeekNumber]," +
+                " COUNT(*) AS [NumberOfTestimonials]" +
+                " FROM Testimonials T" +
+                " GROUP BY ActualUserId, DATEPART(week, DateTimestamp)" +
+                " )" +
+                " SELECT UI.*" +
+                " FROM CTE" +
+                " LEFT JOIN UserInfo UI ON UI.UserID = CTE.ActualUserID" +
+                " WHERE CTE.NumberOfTestimonials < 20;";
 
             var dbResults = _dbContext.Testimonials.FromSqlRaw(query, ActualUserID).ToList();
 
