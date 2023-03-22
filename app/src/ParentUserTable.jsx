@@ -37,7 +37,7 @@ const ParentUserTable = ({ onUserSelected }) => {
   // Fetching data from API
   useEffect(() => {
     setLoading(true);
-    fetch('https://localhost:7107/api/v1/parentusers')
+      fetch('https://localhost:7107/api/v1/data/hometable')
       .then((response) => response.json())
       .then((json) => setParentUsers(json))
       .catch((error) => setError(error))
@@ -108,29 +108,34 @@ const ParentUserTable = ({ onUserSelected }) => {
                     <Table size="small" aria-label="custom pagination table">
                         <TableHead>
                             <TableRow className="table-header" sx={{ backgroundColor: '#B6D770' }}> 
-                                <TableCell sx={{ fontWeight:'bold', alignItems:'center', display: 'flex' }}>
-                                    Company   
-                                    <Search>
-                                        <SearchIconWrapper>
-                                            <SearchIcon />
-                                        </SearchIconWrapper>
-                                        <StyledInputBase
-                                            placeholder="Search…"
-                                            inputProps={{ 'aria-label': 'search' }}
-                                        />
-                                    </Search>
+                                <TableCell>
+                                    Company                     
+                                </TableCell>
+                                <TableCell>
+                                    Average Requests Sent
+                                </TableCell>
+                                <TableCell>
+                                    Average Requests Completed
+                                </TableCell>
+                                <TableCell>
+                                    Completion Percentage
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {parentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
                                 <TableRow
-                                    key={parentUser.userId}
+                                    key={parentUser.UserID}
                                     onClick={() => handleTableRowClick(parentUser)}
                                     sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}
                                 >
-                                    <TableCell>{parentUser.username}</TableCell>                   
+                                    <TableCell>{parentUser.UserID}</TableCell>  
+                                    <TableCell>{parentUser.AverageRequestsSent}</TableCell>  
+                                    <TableCell>{parentUser.AverageRequestsCompleted}</TableCell>  
+                                    <TableCell>{parentUser.CompletionPercentage}</TableCell> 
                                 </TableRow>
+
+
                             ))}
                         </TableBody>
                     </Table>
