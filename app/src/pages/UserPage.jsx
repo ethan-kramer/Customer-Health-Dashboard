@@ -2,15 +2,22 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useEffect, useState } from 'react';
+import { Card, CardContent, CardMedia } from '@mui/material';
+import { Chart, CategoryScale } from 'chart.js';
+import { Line } from "react-chartjs-2";
+
 
 import './UserPage.css';
-import { Card, CardContent, CardMedia } from '@mui/material';
+
+Chart.register(CategoryScale);
 
 export default function UserPage({ user, onClearUser }) {
     const [testimonialCount, setTestimonialCount] = useState([]);
     const [weeklyTestimonialCount, setWeeklyTestimonialCount] = useState([]);
     const [userID, setUserID] = useState(user.userId);
 
+   // const [chartData, setChartData] = useState({});
+   
     console.log(userID);
 
     // Total Testimonals Count
@@ -26,6 +33,29 @@ export default function UserPage({ user, onClearUser }) {
             .then((response) => response.text())
             .then((text) =>  setWeeklyTestimonialCount(parseInt(text) || 0))
     }, [userID]);
+
+
+    const chartData = {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+            datasets: [{
+                label: 'Sales',
+                data: [100, 200, 300, 400, 500, 600],
+            }],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'category', // Make sure to set the scale type to "category"
+                },
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    };
+
 
   const handleHomeClick = (event) => {
     event.preventDefault();
@@ -68,13 +98,13 @@ export default function UserPage({ user, onClearUser }) {
                     </CardContent>
                 </Card>
 
-                <Card className="card" style={{ borderRadius: '20px',backgroundColor: '#f9f9f9' }}>
+                <Card className="card" style={{ borderRadius: '20px', backgroundColor: '#f100001a' }}>
                     <CardContent className="content" style={{ }}>
                         <Typography variant="h1" className="card-info">
                             {weeklyTestimonialCount}
                         </Typography>
                         <Typography variant="h5" component="h2" className="title">
-                            Last Week's Reviews
+                            Average Rating
                         </Typography>
                     </CardContent>
                 </Card>
@@ -92,25 +122,20 @@ export default function UserPage({ user, onClearUser }) {
 
             </div>
             <div style={{ display: 'flex' }}>
-
                 <Card className="chart-card" style={{ borderRadius: '50px', width: '55%', backgroundColor: '#f9f9f9' }}>
-                    <CardMedia
-                        className="media"
-                        image=""
-                        title=""
-                    />
                     <CardContent className="content">
                         <Typography variant="h5" component="h3" className="title">
                             Overall Trend
                         </Typography>
-                        <Typography variant="subtitle1" className="subtitle">
-
-                        </Typography>
-                        <Typography variant="body1" className="description">
-
-                        </Typography>
+                        <Line data={chartData} />
                     </CardContent>
                 </Card>
+                <Line data={chartData}
+                    options={{
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }}
+                />
 
                 <Card className="chart-card" style={{ borderRadius: '50px', width: '25%', backgroundColor: '#f9f9f9' }}>
                     <CardMedia

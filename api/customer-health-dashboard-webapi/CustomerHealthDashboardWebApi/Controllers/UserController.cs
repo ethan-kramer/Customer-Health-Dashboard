@@ -128,7 +128,9 @@ namespace CustomerHealthDashboardWebApi.Controllers
                         " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
                         " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
 
-            return  _dbContext.ExecuteQueryAsDictionary(query);
+            var results = _dbContext.ExecuteQueryAsDictionary(query);
+
+            return results;
         }
 
 
