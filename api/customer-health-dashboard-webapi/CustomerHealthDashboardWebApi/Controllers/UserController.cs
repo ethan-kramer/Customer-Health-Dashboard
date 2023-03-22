@@ -4,6 +4,7 @@ using CustomerHealthDashboardWebApi.Dto.User;
 using CustomerHealthDashboardWebApi.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CustomerHealthDashboardWebApi.Controllers
 {
@@ -89,13 +90,61 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialCount;
         }
 
+        
+        [HttpGet("/api/v1/data/hometable")]
+        public dynamic GetHomeTable([FromQuery(Name = "excludeZeros")] bool excludeZeros)
+        {
+            string baseQuery =
+            " WITH TestimonialStats AS (" +
+            " SELECT" +
+            " TestimonialRequests.UserID," +
+            " DATEPART(YEAR, TestimonialRequests.DateTimeStamp) as [Year]," +
+            " DATEPART(WEEK, TestimonialRequests.DateTimeStamp) AS [Week]," +
+            " COUNT(TestimonialRequests.RequestID) AS [RequestsSent]," +
+            " COUNT(Testimonials.TestimonialID) AS [RequestsCompleted]," +
+            " CAST(COUNT(Testimonials.TestimonialID) AS FLOAT) / NULLIF(CAST(COUNT(TestimonialRequests.RequestID) AS FLOAT), 0) AS [CompletionPercentage]" +
+            " FROM TestimonialRequests" +
+            " LEFT JOIN Testimonials ON Testimonials.requestID = TestimonialRequests.RequestID" +
+            " LEFT JOIN UserInfo ON TestimonialRequests.UserID = UserInfo.Username" +
+            " WHERE" +
+            " TestimonialRequests.DateTimeStamp IS NOT NULL" +
+            " AND" +
+            " TestimonialRequests.DateTimeStamp > DATEADD(YEAR, -1, GETDATE())" +
+            " AND" +
+            " TestimonialRequests.DateTimeStamp < GETDATE()" +
+            " AND" +
+            " UserInfo.Deleted IS NULL" +
+            " GROUP BY" +
+            " TestimonialRequests.UserID," +
+            " DATEPART(YEAR, TestimonialRequests.DateTimestamp)," +
+            " DATEPART(WEEK, TestimonialRequests.DATETIMESTAMP)" +
+            " ) SELECT" +
+            " UserID," +
+            " AVG(CAST(RequestsSent AS FLOAT)) as AverageRequestsSent," +
+            " AVG(CAST(RequestsCompleted AS FLOAT)) as AverageRequestsCompleted," +
+            " AVG(CAST(CompletionPercentage AS FLOAT)) as CompletionPercentage" +
+            " FROM TestimonialStats";
 
-        // IN PROGRESS
-        // num surveys sent/received by week for specific user
+            if (excludeZeros)
+            {
+                baseQuery += " WHERE CompletionPercentage > 0";
+            }
+
+            var query = baseQuery +
+                " GROUP BY" +
+                " UserID" +
+                " ORDER BY" +
+                " CompletionPercentage ASC;";
+
+            return _dbContext.ExecuteQueryAsDictionary(query);
+        }
+
+
+        // num surveys sent/received by week for specific user (graph info)
         [HttpGet("/api/v1/data/{Username}/surveygraph")]
         public dynamic GetSurveysStats(string Username, [FromQuery(Name = "excludeZeros")] bool excludeZeros)
         {
-            string baseQuery =
+            string query =
                 " SELECT" +
                 " surveyRequests.Username," +
                 " DATEPART(YEAR, surveyRequests.DateTimeStamp) as [Year]," +
@@ -112,24 +161,55 @@ namespace CustomerHealthDashboardWebApi.Controllers
                 " AND" +
                 " surveyRequests.DateTimeStamp < GETDATE()" +
                 " AND" +
-                " surveyRequests.Username = '" + Username.ToString() + "'";
-
-            if (excludeZeros)
-            {
-                baseQuery += " AND CompletionPercentage != 0";
-            }
-
-            var query = baseQuery +
-                        " GROUP BY" +
-                        " surveyRequests.Username," +
-                        " DATEPART(YEAR, surveyRequests.DateTimestamp)," +
-                        " DATEPART(WEEK, surveyRequests.DATETIMESTAMP)" +
-                        " ORDER BY" +
-                        " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
-                        " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
+                " surveyRequests.Username = '" + Username.ToString() + "'" +
+                " GROUP BY" +
+                " surveyRequests.Username," +
+                " DATEPART(YEAR, surveyRequests.DateTimestamp)," +
+                " DATEPART(WEEK, surveyRequests.DATETIMESTAMP)" +
+                " ORDER BY" +
+                " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
+                " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
+ 
 
             return  _dbContext.ExecuteQueryAsDictionary(query);
         }
+
+
+        // num testimonials sent/received by week for specific user (graph info)
+        [HttpGet("/api/v1/data/{Username}/testimonialgraph")]
+        public dynamic GetTestimonialStats(string Username)
+        {
+            string query =
+                " SELECT" +
+                " TestimonialRequests.UserID," +
+                " DATEPART(YEAR, TestimonialRequests.DateTimeStamp) as [Year]," +
+                " DATEPART(WEEK, TestimonialRequests.DateTimeStamp) AS [Week]," +
+                " COUNT(TestimonialRequests.RequestID) AS [RequestsSent]," +
+                " COUNT(Testimonials.TestimonialID) AS [RequestsCompleted]," +
+                " CAST(COUNT(Testimonials.TestimonialID) AS FLOAT) / NULLIF(CAST(COUNT(TestimonialRequests.RequestID) AS FLOAT), 0) AS [CompletionPercentage]" +
+                " FROM TestimonialRequests" +
+                " LEFT JOIN Testimonials ON Testimonials.requestID = TestimonialRequests.RequestID" +
+                " WHERE" +
+                " TestimonialRequests.DateTimeStamp IS NOT NULL" +
+                " AND" +
+                " TestimonialRequests.DateTimeStamp > DATEADD(YEAR, -1, GETDATE())" +
+                " AND" +
+                " TestimonialRequests.DateTimeStamp < GETDATE()" +
+                " AND" +
+                " TestimonialRequests.UserID = '" + Username.ToString() + "'" +
+                " GROUP BY" +
+                " TestimonialRequests.UserID," +
+                " DATEPART(YEAR, TestimonialRequests.DateTimestamp)," +
+                " DATEPART(WEEK, TestimonialRequests.DATETIMESTAMP)" +
+                " ORDER BY" +
+                " DATEPART(YEAR, TestimonialRequests.DateTimestamp) ASC," +
+                " DATEPART(WEEK, TestimonialRequests.DATETIMESTAMP) ASC;";
+
+
+            return _dbContext.ExecuteQueryAsDictionary(query);
+        }
+        
+
 
 
         // num testimonials last week for specific user
