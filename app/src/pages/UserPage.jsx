@@ -9,7 +9,7 @@ import { Card, CardContent, CardMedia } from '@mui/material';
 export default function UserPage({ user, onClearUser }) {
     const [testimonialCount, setTestimonialCount] = useState([]);
     const [weeklyTestimonialCount, setWeeklyTestimonialCount] = useState([]);
-    const [userID, setUserID] = useState(user.userId);
+    const [userID, setUserID] = useState(user.UserID);
 
     console.log(userID);
 

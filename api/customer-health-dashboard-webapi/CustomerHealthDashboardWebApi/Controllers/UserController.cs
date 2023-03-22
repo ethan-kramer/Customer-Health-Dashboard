@@ -65,15 +65,15 @@ namespace CustomerHealthDashboardWebApi.Controllers
         }
 
 
-        [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")]
-        public int GetUserTestimonialCount(int ActualUserID)
+        [HttpGet("/api/v1/data/{UserID}/testimonialcount")]
+        public int GetUserTestimonialCount(string UserID)
         {
             var testimonialCount = 0;
 
 
             string query =
                 " SELECT COUNT(*) as totalReviews" +
-                " FROM Testimonials WHERE ActualUserID = " + ActualUserID.ToString();
+                " FROM Testimonials WHERE UserID = " + UserID;
 
             var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
 
@@ -94,6 +94,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
         [HttpGet("/api/v1/data/hometable")]
         public dynamic GetHomeTable([FromQuery(Name = "excludeZeros")] bool excludeZeros)
         {
+            excludeZeros = true;
             string baseQuery =
             " WITH TestimonialStats AS (" +
             " SELECT" +
