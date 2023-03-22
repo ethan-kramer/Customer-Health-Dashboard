@@ -1,23 +1,14 @@
-﻿using System.Data.Common;
-using CustomerHealthDashboardWebApi.Data;
-using CustomerHealthDashboardWebApi.Dto.User;
+﻿using CustomerHealthDashboardWebApi.Data;
 using CustomerHealthDashboardWebApi.Dto.Testimonials;
-using Microsoft.AspNetCore.Http;
+using CustomerHealthDashboardWebApi.Dto.User;
+using CustomerHealthDashboardWebApi.Util;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Configuration;
-using System.Xml.Linq;
-using Microsoft.AspNetCore.DataProtection;
-using CustomerHealthDashboardWebApi.Util;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Data.SqlClient;
 
 namespace CustomerHealthDashboardWebApi.Controllers
 {
     [ApiController]
-    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -273,7 +264,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
         }
 
 
-        private UserInfoDto GetUserInfoDto(Data.UserInfo dataUserInfo)
+        private UserInfoDto GetUserInfoDto(UserInfo dataUserInfo)
         {
             //This maps the db model to the dto you will send to the front end
             //this allows you to add properties that may not be stored in the database that the front end needs
@@ -289,7 +280,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
 
 
         // "not all code paths return a value"?
-        private TestimonialsDto GetTestimonialsDto(Data.Testimonials dataTestimonials)
+        private TestimonialsDto GetTestimonialsDto(Testimonials dataTestimonials)
         {
             var testimonialsDto = new TestimonialsDto();
             //testimonialsDto.ActualUserID = dataTestimonials.ActualUserID;
