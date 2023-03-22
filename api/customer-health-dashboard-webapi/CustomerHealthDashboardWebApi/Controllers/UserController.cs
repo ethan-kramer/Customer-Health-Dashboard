@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.DataProtection;
 using CustomerHealthDashboardWebApi.Util;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Data.SqlClient;
 
 namespace CustomerHealthDashboardWebApi.Controllers
 {
@@ -130,8 +131,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
                 " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
                 " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
 
-
-            var dbResults = _dbContext.ExecuteQueryAsDictionary(query).ToList();
+            var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
 
             return dbResults;
         }
