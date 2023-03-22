@@ -72,8 +72,8 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return userDtos;
         }
 
-        
-        [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")] 
+
+        [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")]
         public int GetUserTestimonialCount(int ActualUserID)
         {
             var testimonialCount = 0;
@@ -98,14 +98,13 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialCount;
         }
 
-        
+
         // IN PROGRESS
         // num surveys sent/received by week for specific user
         [HttpGet("/api/v1/data/{Username}/surveygraph")]
-        public dynamic GetSurveysStats(string Username)
+        public dynamic GetSurveysStats(string Username, [FromQuery(Name = "excludeZeros")] bool excludeZeros)
         {
-
-            string query =
+            string baseQuery =
                 " SELECT" +
                 " surveyRequests.Username," +
                 " DATEPART(YEAR, surveyRequests.DateTimeStamp) as [Year]," +
@@ -122,21 +121,28 @@ namespace CustomerHealthDashboardWebApi.Controllers
                 " AND" +
                 " surveyRequests.DateTimeStamp < GETDATE()" +
                 " AND" +
-                " surveyRequests.Username = '" + Username.ToString() + "'" +
-                " GROUP BY" +
-                " surveyRequests.Username," +
-                " DATEPART(YEAR, surveyRequests.DateTimestamp)," +
-                " DATEPART(WEEK, surveyRequests.DATETIMESTAMP)" +
-                " ORDER BY" +
-                " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
-                " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
+                " surveyRequests.Username = '" + Username.ToString() + "'";
+
+            if (excludeZeros)
+            {
+                baseQuery += " AND CompletionPercentage != 0";
+            }
+
+            var query = baseQuery +
+                        " GROUP BY" +
+                        " surveyRequests.Username," +
+                        " DATEPART(YEAR, surveyRequests.DateTimestamp)," +
+                        " DATEPART(WEEK, surveyRequests.DATETIMESTAMP)" +
+                        " ORDER BY" +
+                        " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
+                        " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
 
             var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
 
             return dbResults;
         }
-        
-        
+
+
         // num testimonials last week for specific user
         [HttpGet("/api/v1/data/{ActualUserID}/testimonialslastweek")]
         public int GetTestimonialsLastWeek(int ActualUserID)
@@ -147,7 +153,8 @@ namespace CustomerHealthDashboardWebApi.Controllers
             string query =
                 " SELECT ActualUserID, COUNT(*) AS NumReviews, DATEPART(week, GETDATE()) AS ThisWeek, DATEPART(week, DATEADD(week, -1, GETDATE())) as LastWeek" +
                 " FROM TESTIMONIALS" +
-                " WHERE DATEPART(week, DATETIMESTAMP) = DATEPART(week, DATEADD(week, -1, GETDATE())) AND ActualUserID = " + ActualUserID.ToString() +
+                " WHERE DATEPART(week, DATETIMESTAMP) = DATEPART(week, DATEADD(week, -1, GETDATE())) AND ActualUserID = " +
+                ActualUserID.ToString() +
                 " GROUP BY ActualUserID, DATEPART(week, DATETIMESTAMP);";
 
             var dbResults = _dbContext.ExecuteQueryAsDictionary(query); // return as a dictionary
@@ -170,12 +177,11 @@ namespace CustomerHealthDashboardWebApi.Controllers
         [HttpGet("/api/v1/data/{ActualUserID}/weeklyaverage")]
         public int GetWeeklyAverage(int ActualUserID)
         {
-
             string query =
                 " WITH UserTestimonials AS (" +
                 " SELECT ActualUserID, DATEPART(week, DATETIMESTAMP) AS SpecificWeek, COUNT(*) AS NumReviews" +
                 " FROM TESTIMONIALS" +
-                " WHERE ActualUserID = " + ActualUserID.ToString() + 
+                " WHERE ActualUserID = " + ActualUserID.ToString() +
                 " GROUP BY ActualUserID, DATEPART(week, DATETIMESTAMP)" +
                 " ) " +
                 " SELECT AVG(NumReviews) AS WeeklyAverage" +
@@ -194,7 +200,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
                     weeklyAverage = (int)value;
                 }
             }
-            
+
             return weeklyAverage;
         }
 
@@ -203,7 +209,6 @@ namespace CustomerHealthDashboardWebApi.Controllers
         [HttpGet("/api/v1/data/{ActualUserID}/averagerating")]
         public int GetAverageRating(int ActualUserID)
         {
-
             string query =
                 " WITH userRatings AS (" +
                 " SELECT ActualUserID, CAST(Rating AS int) as IntRating" +
