@@ -100,10 +100,9 @@ namespace CustomerHealthDashboardWebApi.Controllers
         
         // IN PROGRESS
         // num surveys sent/received by week for specific user
-        [HttpGet("/api/v1/data/{ActualUserID}/surveygraph")]
-        public Dictionary<string, List<TestimonialsDto>> GetSurveysStats(int Username)
+        [HttpGet("/api/v1/data/{Username}/surveygraph")]
+        public dynamic GetSurveysStats(string Username)
         {
-            var testimonialsDtos = new Dictionary<string, List<TestimonialsDto>>();
 
             string query =
                 " SELECT" +
@@ -122,7 +121,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
                 " AND" +
                 " surveyRequests.DateTimeStamp < GETDATE()" +
                 " AND" +
-                " surveyRequests.Username = " + Username.ToString() +
+                " surveyRequests.Username = '" + Username.ToString() + "'" +
                 " GROUP BY" +
                 " surveyRequests.Username," +
                 " DATEPART(YEAR, surveyRequests.DateTimestamp)," +
@@ -131,18 +130,10 @@ namespace CustomerHealthDashboardWebApi.Controllers
                 " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
                 " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
 
-            var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
 
             var dbResults = _dbContext.ExecuteQueryAsDictionary(query).ToList();
 
-            foreach (var dbResult in dbResults)
-            {
-                //build the dtos here that you will send to the front end
-               // var testimonialsDto = GetTestimonialsDto(dbResult);
-                //testimonialsDtos.Add(testimonialsDto);
-            }
-
-            return testimonialsDtos;
+            return dbResults;
         }
         
         
