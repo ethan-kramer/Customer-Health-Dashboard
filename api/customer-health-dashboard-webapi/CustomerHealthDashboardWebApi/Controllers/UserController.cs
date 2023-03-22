@@ -11,11 +11,12 @@ using System.Xml.Linq;
 using Microsoft.AspNetCore.DataProtection;
 using CustomerHealthDashboardWebApi.Util;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.AspNetCore.Components;
 
 namespace CustomerHealthDashboardWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -70,7 +71,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return userDtos;
         }
 
-
+        
         [HttpGet("/api/v1/data/{ActualUserID}/testimonialcount")] 
         public int GetUserTestimonialCount(int ActualUserID)
         {
@@ -96,29 +97,39 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialCount;
         }
 
+        
         // IN PROGRESS
         // num surveys sent/received by week for specific user
-        [HttpGet("/api/v1/data/{ActualUserID}/weeklytestimonials")]
-        public List<TestimonialsDto> GetSurveysSentAndReceived(int ActualUserID)
+        [HttpGet("/api/v1/data/{ActualUserID}/surveygraph")]
+        public Dictionary<string, List<TestimonialsDto>> GetSurveysStats(int Username)
         {
-            var testimonialsDtos = new List<TestimonialsDto>();
+            var testimonialsDtos = new Dictionary<string, List<TestimonialsDto>>();
 
             string query =
                 " SELECT" +
-                " UserInfo.Username," +
-                " COUNT(surveyRequests.RequestID) AS TotalSurveyRequestsSent," +
-                " COUNT(surveyTaken.id) AS TotalSureveysTaken," +
-                " DATEPART(week, DATETIMESTAMP) AS SpecificWeek" +
-                " FROM UserInfo" +
-                " LEFT JOIN surveyRequests ON UserInfo.Username = surveyRequests.Username" +
+                " surveyRequests.Username," +
+                " DATEPART(YEAR, surveyRequests.DateTimeStamp) as [Year]," +
+                " DATEPART(WEEK, surveyRequests.DateTimeStamp) AS [Week]," +
+                " COUNT(surveyRequests.RequestID) AS [RequestsSent]," +
+                " COUNT(surveyTaken.id) AS [RequestsCompleted]," +
+                " CAST(COUNT(surveyTaken.id) AS FLOAT) / NULLIF(CAST(COUNT(surveyRequests.RequestID) AS FLOAT), 0) AS [CompletionPercentage]" +
+                " FROM surveyRequests" +
                 " LEFT JOIN surveyTaken ON surveyTaken.surveyRequestID = surveyRequests.RequestID" +
-                " WHERE " +
-                " surveyRequests.DateTimeStamp > DATEADD(YEAR, -1, GETDATE()) AND " +
-                " surveyRequests.DateTimeStamp < GETDATE() AND" +
-                " (UserInfo.Deleted IS NULL OR UserInfo.Deleted = 'False' OR UserInfo.Deleted = '0') AND" +
-                " UserInfo.Username = 'wsbadcock'" +
-                " GROUP BY UserInfo.Username, DATEPART(week, DATETIMESTAMP)" +
-                " ORDER BY DATEPART(week, DATETIMESTAMP) ASC";
+                " WHERE" +
+                " surveyRequests.DateTimeStamp IS NOT NULL" +
+                " AND" +
+                " surveyRequests.DateTimeStamp > DATEADD(YEAR, -1, GETDATE())" +
+                " AND" +
+                " surveyRequests.DateTimeStamp < GETDATE()" +
+                " AND" +
+                " surveyRequests.Username = " + Username.ToString() +
+                " GROUP BY" +
+                " surveyRequests.Username," +
+                " DATEPART(YEAR, surveyRequests.DateTimestamp)," +
+                " DATEPART(WEEK, surveyRequests.DATETIMESTAMP)" +
+                " ORDER BY" +
+                " DATEPART(YEAR, surveyRequests.DateTimestamp) ASC," +
+                " DATEPART(WEEK, surveyRequests.DATETIMESTAMP) ASC;";
 
             var dbSet = _dbContext.Set<Testimonials>().DefaultIfEmpty().AsNoTracking();
 
@@ -127,13 +138,13 @@ namespace CustomerHealthDashboardWebApi.Controllers
             foreach (var dbResult in dbResults)
             {
                 //build the dtos here that you will send to the front end
-                var testimonialsDto = GetTestimonialsDto(dbResult);
-                testimonialsDtos.Add(testimonialsDto);
+               // var testimonialsDto = GetTestimonialsDto(dbResult);
+                //testimonialsDtos.Add(testimonialsDto);
             }
 
             return testimonialsDtos;
         }
-
+        
         
         // num testimonials last week for specific user
         [HttpGet("/api/v1/data/{ActualUserID}/testimonialslastweek")]
