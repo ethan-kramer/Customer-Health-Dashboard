@@ -9,6 +9,7 @@ import { Card, CardContent, CardMedia } from '@mui/material';
 export default function UserPage({ user, onClearUser }) {
     const [testimonialCount, setTestimonialCount] = useState([]);
     const [weeklyTestimonialCount, setWeeklyTestimonialCount] = useState([]);
+    const [averageRating, setAverageRating] = useState([]);
     const [userID, setUserID] = useState(user.UserID);
 
     console.log(userID);
@@ -25,6 +26,13 @@ export default function UserPage({ user, onClearUser }) {
         fetch(`https://localhost:7107/api/v1/data/${userID}/weeklytestimonial`)
             .then((response) => response.text())
             .then((text) =>  setWeeklyTestimonialCount(parseInt(text) || 0))
+    }, [userID]);
+
+    // Average Star Rating
+    useEffect(() => {
+        fetch(`https://localhost:7107/api/v1/data/${userID}/averagerating`)
+            .then((response) => response.text())
+            .then((text) => setAverageRating(parseInt(text) || 0))
     }, [userID]);
 
   const handleHomeClick = (event) => {
@@ -71,10 +79,10 @@ export default function UserPage({ user, onClearUser }) {
                 <Card className="card" style={{ borderRadius: '20px',backgroundColor: '#f9f9f9' }}>
                     <CardContent className="content" style={{ }}>
                         <Typography variant="h1" className="card-info">
-                            {weeklyTestimonialCount}
+                            {averageRating}/5
                         </Typography>
                         <Typography variant="h5" component="h2" className="title">
-                            Last Week's Reviews
+                            Average Star Rating
                         </Typography>
                     </CardContent>
                 </Card>

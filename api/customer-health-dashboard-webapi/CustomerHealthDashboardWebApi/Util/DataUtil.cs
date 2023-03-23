@@ -23,39 +23,31 @@ namespace CustomerHealthDashboardWebApi.Util
                     }
                 }
 
-                try
+                dbContext.Database.OpenConnection();
+
+                var dt = new DataTable();
+
+                using (var dr = command.ExecuteReader())
                 {
-                    dbContext.Database.OpenConnection();
+                    dt.Load(dr);
 
-                    var dt = new DataTable();
+                }
+                foreach (System.Data.DataRow dataRow in dt.Rows)
+                {
+                    var dictionary = new Dictionary<string, Object>();
 
-                    using (var dr = command.ExecuteReader())
+                    foreach (System.Data.DataColumn dataColumn in dt.Columns)
                     {
-                        dt.Load(dr);
-
-                    }
-                    foreach (System.Data.DataRow dataRow in dt.Rows)
-                    {
-                        var dictionary = new Dictionary<string, Object>();
-
-                        foreach (System.Data.DataColumn dataColumn in dt.Columns)
+                        var columName = dataColumn.ColumnName;
+                        var columnValue = dataRow[dataColumn.ColumnName];
+                        if (columnValue == null)
                         {
-                            var columName = dataColumn.ColumnName;
-                            var columnValue = dataRow[dataColumn.ColumnName];
-                            if (columnValue == null)
-                            {
-                                columnValue = ObjectUtil.GetDefaultTypeValue(dataColumn.DataType);
-                            }
-                            dictionary.Add(columName, columnValue);
+                            columnValue = ObjectUtil.GetDefaultTypeValue(dataColumn.DataType);
                         }
-                        results.Add(dictionary);
+                        dictionary.Add(columName, columnValue);
                     }
+                    results.Add(dictionary);
                 }
-                catch
-                {
-
-                }
-
             }
             return results;
         }
