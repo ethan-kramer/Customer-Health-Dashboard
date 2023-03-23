@@ -2,6 +2,7 @@
 using CustomerHealthDashboardWebApi.Dto.Testimonials;
 using CustomerHealthDashboardWebApi.Dto.User;
 using CustomerHealthDashboardWebApi.Util;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -73,7 +74,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
 
             string query =
                 " SELECT COUNT(*) as totalReviews" +
-                " FROM Testimonials WHERE UserID = " + UserID;
+                " FROM Testimonials WHERE UserID = '" + UserID + "'";
 
             var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
 
@@ -276,23 +277,22 @@ namespace CustomerHealthDashboardWebApi.Controllers
 
 
         // average stars 
-        [HttpGet("/api/v1/data/{ActualUserID}/averagerating")]
-        public int GetAverageRating(int ActualUserID)
+        [HttpGet("/api/v1/data/{UserID}/averagerating")]
+        public int GetAverageRating(string UserID)
         {
+            var averageRating = 0;
+
             string query =
                 " WITH userRatings AS (" +
-                " SELECT ActualUserID, CAST(Rating AS int) as IntRating" +
+                " SELECT UserID, CAST(Rating AS int) as IntRating" +
                 " FROM Testimonials" +
-                " WHERE ActualUserID = " + ActualUserID.ToString() +
-                " GROUP BY ActualUserID, Rating" +
+                " WHERE UserID = '" + UserID.ToString() + "'" +
+                " GROUP BY UserID, Rating" +
                 " )" +
                 " SELECT AVG(IntRating) as AverageRating" +
                 " From userRatings;";
 
-
-            var dbResults = _dbContext.ExecuteQueryAsDictionary(query); // return as a dictionary
-
-            int averageRating = -1;
+            var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
 
             foreach (Dictionary<string, object> dbResult in dbResults)
             {
@@ -303,8 +303,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
                     averageRating = (int)value;
                 }
             }
-
-            return averageRating;
+                return averageRating;
         }
 
         // getting all user information for any that had < 20 reviews in a given week
