@@ -56,12 +56,12 @@ export default function UserPage({ user, onClearUser }) {
           Home
         </Link>
         <Link color="inherit" href="/parentUsers">
-          {user.username}
+          {user.UserID}
                 </Link>
           </Breadcrumbs>
             {/* Title */}
             <div className="customer-health-heading">
-                <span>{user.username} Dashboard </span>
+                <span>{user.UserID} Dashboard </span>
           </div>
             {/* Stats Cards */}
           <div style={{ display: 'flex' }}>
