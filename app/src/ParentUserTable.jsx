@@ -23,6 +23,12 @@ const ParentUserTable = ({ onUserSelected }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Toggle
+    const [excludeZeros, setExcludeZeros] = useState(false);
+    const [buttonText, setButtonText] = useState('Exclude 0');
+
+
+
   const handleChangePage = (event, newPage) => {
     // update page when it is changed
     setPage(newPage);
@@ -32,8 +38,33 @@ const ParentUserTable = ({ onUserSelected }) => {
     // update rows per page when changing amount desired
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
+    };
 
+    function fetchData(toggleIsOn) {
+        const url = 'https://localhost:7107/api/v1/data/hometable';
+        let queryString = '';
+
+        if (toggleIsOn) { // check if true
+            queryString = '?excludeZeros=true';
+            setButtonText('Exclude 0');
+
+            fetch(url + queryString) // then fetch completion > 0
+                .then(response => response.json())
+                .then((json) => setParentUsers(json));
+        }
+        else { // otherwise fetch all
+            setButtonText('Include 0');
+            fetch(url)
+                .then(response => response.json())
+                .then((json) => setParentUsers(json));
+        }
+    }
+
+    useEffect(() => { // initialized to false (zeros show)
+        fetchData(excludeZeros);
+    }, [excludeZeros]);
+
+/*
   // Fetching data from API
   useEffect(() => {
     setLoading(true);
@@ -42,7 +73,7 @@ const ParentUserTable = ({ onUserSelected }) => {
       .then((json) => setParentUsers(json))
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
-  }, []); // empty dependency array bc need effect to run once for fetching API data
+  }, []); // empty dependency array bc need effect to run once for fetching API data */
 
   if (loading) return <div>loading...</div>;
 
@@ -51,7 +82,8 @@ const ParentUserTable = ({ onUserSelected }) => {
   function handleTableRowClick(parentUser) {
     // call the on user selected prop method
     onUserSelected(parentUser);
-  }
+    }
+
 
   // create a SearchBar component
     const Search = styled('div')(({ theme }) => ({
@@ -103,6 +135,13 @@ const ParentUserTable = ({ onUserSelected }) => {
             <div className="customer-health-heading">
                 Customer Health Dashboard
             </div>
+            <div className="toggle-button">
+            <button className={excludeZeros ? 'toggle-switch on' : 'toggle-switch off'} onClick={() => setExcludeZeros(!excludeZeros)}>
+                <span className="toggle-switch-text">{excludeZeros ? 'Exclude' : 'Include'}</span>
+                </button>
+            </div>
+
+           
             {parentUsers.length > 0 ? ( // if there are parent users then display table
                 <TableContainer className="parent-table" component={Paper}>
                     <Table size="small" aria-label="custom pagination table">
@@ -132,7 +171,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                                     <TableCell>{parentUser.UserID}</TableCell>  
                                     <TableCell>{parentUser.AverageRequestsSent}</TableCell>  
                                     <TableCell>{parentUser.AverageRequestsCompleted}</TableCell>  
-                                    <TableCell>{parentUser.CompletionPercentage}</TableCell> 
+                                    <TableCell>{(parentUser.CompletionPercentage * 100).toFixed(3)}%</TableCell>
                                 </TableRow>
 
 
@@ -149,7 +188,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                     />
                 </TableContainer>
             ) : (
-                <div>No data</div>
+                <div>Loading...</div>
             )}
         </div>
     )

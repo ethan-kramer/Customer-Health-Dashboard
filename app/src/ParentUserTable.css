@@ -42,3 +42,47 @@
     margin-bottom: 3rem;
 }
 
+.toggle-button {
+    margin: auto 0;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-flex;
+    width: 50px;
+    height: 25px;
+    background-color: #ccc;
+    border-radius: 25px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+    .toggle-switch.on {
+        background-color: #B6D770;
+   
+        left:200px;
+    }
+
+    .toggle-switch.off {
+        background-color: #B6D770;
+       
+        left: 200px;
+    }
+
+.toggle-switch-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    white-space: nowrap;
+    font-weight: bold;
+    color: #000;
+    transition: transform 0.2s;
+    transform: translateX(${props => props.excludeZeros ? '25px' : '0'});
+}

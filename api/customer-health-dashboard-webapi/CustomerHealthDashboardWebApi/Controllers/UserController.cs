@@ -95,7 +95,7 @@ namespace CustomerHealthDashboardWebApi.Controllers
         [HttpGet("/api/v1/data/hometable")]
         public dynamic GetHomeTable([FromQuery(Name = "excludeZeros")] bool excludeZeros)
         {
-            excludeZeros = true;
+           // excludeZeros = true;
             string baseQuery =
             " WITH TestimonialStats AS (" +
             " SELECT" +
