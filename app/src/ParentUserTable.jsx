@@ -11,6 +11,7 @@ import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import Switch from '@mui/material/Switch';
 
 import './ParentUserTable.css'
 
@@ -26,8 +27,6 @@ const ParentUserTable = ({ onUserSelected }) => {
   // Toggle
     const [excludeZeros, setExcludeZeros] = useState(false);
     const [buttonText, setButtonText] = useState('Exclude 0');
-
-
 
   const handleChangePage = (event, newPage) => {
     // update page when it is changed
@@ -86,17 +85,17 @@ const ParentUserTable = ({ onUserSelected }) => {
 
 
   // create a SearchBar component
-    const Search = styled('div')(({ theme }) => ({
+    const Search = styled('div')(({ theme, tableWidth }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        backgroundColor: '#FFFFFF',
         '&:hover': {
             backgroundColor: alpha(theme.palette.common.white, 0.25),
         },
-        marginLeft: 0,
-        width: '100%',
+        marginLeft: `calc(${tableWidth}px + ${theme.spacing(2)})`,
+        width: '50%',
         [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(60),
+            marginLeft: `calc(${tableWidth}px + ${theme.spacing(60)})`,
             width: '50%',
         },
     }));
@@ -112,12 +111,10 @@ const ParentUserTable = ({ onUserSelected }) => {
         justifyContent: 'center',
     }));
 
-    // Searchbar Input
     const StyledInputBase = styled(InputBase)(({ theme }) => ({
         color: 'inherit',
         '& .MuiInputBase-input': {
             padding: theme.spacing(1, 1, 1, 0),
-            // vertical padding + font size from searchIcon
             paddingLeft: `calc(1em + ${theme.spacing(4)})`,
             transition: theme.transitions.create('width'),
             width: '100%',
@@ -135,13 +132,23 @@ const ParentUserTable = ({ onUserSelected }) => {
             <div className="customer-health-heading">
                 Customer Health Dashboard
             </div>
-            <div className="toggle-button">
-            <button className={excludeZeros ? 'toggle-switch on' : 'toggle-switch off'} onClick={() => setExcludeZeros(!excludeZeros)}>
-                <span className="toggle-switch-text">{excludeZeros ? 'Exclude' : 'Include'}</span>
-                </button>
-            </div>
+            <div className="table-container">
+                <Search>
+                    <SearchIconWrapper>
+                        <SearchIcon />
+                    </SearchIconWrapper>
+                    <StyledInputBase
+                        placeholder="Search…"
+                        inputProps={{ 'aria-label': 'search' }}
+                    />
+                </Search>
 
-           
+            <div className="toggle-button">
+                <Switch defaultChecked 
+            onClick={() => setExcludeZeros(!excludeZeros)}
+                />
+                {excludeZeros ? <span>Exclude zeros</span> : <span>Include zeros</span>}
+            </div>
             {parentUsers.length > 0 ? ( // if there are parent users then display table
                 <TableContainer className="parent-table" component={Paper}>
                     <Table size="small" aria-label="custom pagination table">
@@ -190,6 +197,7 @@ const ParentUserTable = ({ onUserSelected }) => {
             ) : (
                 <div>Loading...</div>
             )}
+            </div>
         </div>
     )
  
