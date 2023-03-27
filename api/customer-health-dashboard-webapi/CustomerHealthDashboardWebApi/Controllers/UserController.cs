@@ -91,7 +91,34 @@ namespace CustomerHealthDashboardWebApi.Controllers
             return testimonialCount;
         }
 
-        
+
+        [HttpGet("/api/v1/data/{UserID}/surveycount")]
+        public int GetUserSurveyCount(string UserID)
+        {
+            var surveyCount = 0;
+
+            string query =
+                " SELECT COUNT(surveyTaken.id) AS RequestsCompleted" +
+                " FROM surveyTaken" +
+                " LEFT JOIN surveyRequests ON surveyRequests.RequestID = surveyTaken.surveyRequestID" +
+                " WHERE surveyRequests.Username = '" + UserID + "';";
+
+            var dbResults = _dbContext.ExecuteQueryAsDictionary(query);
+
+            foreach (Dictionary<string, object> dbResult in dbResults)
+            {
+                object value;
+                dbResult.TryGetValue("RequestsCompleted", out value);
+                if (value != null)
+                {
+                    surveyCount = (int)value;
+                }
+            }
+
+            return surveyCount;
+        }
+
+
         [HttpGet("/api/v1/data/hometable")]
         public dynamic GetHomeTable([FromQuery(Name = "excludeZeros")] bool excludeZeros)
         {
