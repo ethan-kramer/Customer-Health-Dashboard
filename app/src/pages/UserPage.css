@@ -111,3 +111,15 @@
 .chart-card .media {
     height: 500px;
 }
+
+.test-graph {
+    width: 50%;
+    background: white;
+    padding: 50px;
+}
+
+.survey-graph {
+    width: 50%;
+    background: white;
+    padding: 50px;
+}
