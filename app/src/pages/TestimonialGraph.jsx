@@ -49,19 +49,15 @@ const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks wi
         }
     });
 
-    console.log("weekData: ", weekData);
-
     const requestsCompleted = weekData.map((data) => data.RequestsCompleted);   // num requests completed [15,1,11,3,7,6,0,8,44]        (this data is for Redi_carpet)
     const requestsSent = weekData.map((data) => data.RequestsSent);             // num requests sent?    
     const weeksCompleted = weekData.map((data) => data.Week);                   // corresponding weeks    [31, 33, 37, 41, 45, 50, 1, 5, 9]
 
  
-    const weeks = Array.from({ length: 52 }, (_, i) => (currentWeek + i > 52 ? currentWeek + i - 52 : currentWeek + i));
-
-    console.log("JSON: ", testimonial);
+    const weeks = Array.from({ length: 53 }, (_, i) => (currentWeek + i > 52 ? currentWeek + i - 52 : currentWeek + i));
 
     const formatted_dictionary = [];
-    for (let i = 0; i < weeks.length; i++) {
+    for (let i = 1; i < weeks.length; i++) {
         const weekData = {
             RequestsSent: 0,
             RequestsCompleted: 0,
@@ -76,7 +72,7 @@ const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks wi
         formatted_dictionary.push(weekData);
     }
 
-    console.log("data: ", formatted_dictionary);
+    console.log("testimonial data: ", formatted_dictionary);
 
     const week = formatted_dictionary.map(item => ({ Year: item.Year, Week: item.Week }));
     const labels = week.map((week, index) => `Week ${week.Week}, ${week.Year}`);
