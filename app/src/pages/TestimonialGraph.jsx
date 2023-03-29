@@ -33,6 +33,8 @@ const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks wi
         return weekNumber;
     }
 
+    const currentWeek = getWeek();
+
     const weekData = Array.from({ length: 52 }, (_, i) => {
         // const index = i + 1;
         if (testimonial[i]) { // if value exists
@@ -47,18 +49,35 @@ const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks wi
         }
     });
 
+    console.log("weekData: ", weekData);
+
     const requestsCompleted = weekData.map((data) => data.RequestsCompleted);   // num requests completed [15,1,11,3,7,6,0,8,44]        (this data is for Redi_carpet)
+    const requestsSent = weekData.map((data) => data.RequestsSent);             // num requests sent?    
     const weeksCompleted = weekData.map((data) => data.Week);                   // corresponding weeks    [31, 33, 37, 41, 45, 50, 1, 5, 9]
 
-    const currentWeek = getWeek();
+ 
     const weeks = Array.from({ length: 52 }, (_, i) => (currentWeek + i > 52 ? currentWeek + i - 52 : currentWeek + i));
-    const combinedArray = weeks.map((week) => {
-        const index = weeksCompleted.indexOf(week);
-        return index !== -1 ? requestsCompleted[index] : 0;
-    });
 
-    console.log("Results with nulls: ", combinedArray);
-    
+    console.log("JSON: ", testimonial);
+
+    const formatted_dictionary = [];
+    for (let i = 0; i < weeks.length; i++) {
+        const weekData = {
+            RequestsSent: 0,
+            RequestsCompleted: 0,
+            Year: currentWeek - weeks[i] >= 0 ? new Date().getFullYear() : new Date().getFullYear() - 1,
+            Week: weeks[i],
+        };
+        const index = weeksCompleted.indexOf(weekData.Week);
+        if (index !== -1) {
+            weekData.RequestsCompleted = requestsCompleted[index];
+            weekData.RequestsSent = requestsSent[index];
+        }
+        formatted_dictionary.push(weekData);
+    }
+
+    console.log("data: ", formatted_dictionary);
+
     const week = testimonial.map(item => ({ Year: item.Year, Week: item.Week }));
     const labels = week.map((week, index) => `Week ${week.Week}, ${week.Year}`);
 
