@@ -41,7 +41,7 @@
 
 .card {
     width: 25%;
-    max-width: 500px;
+    max-width: 400px;
     height: 300px;
     border-radius: 15px;
     box-shadow: 10px 10px 10px rgba(2, 0, 0, 0.1);
@@ -114,12 +114,24 @@
 
 .test-graph {
     width: 50%;
-    background: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    margin-bottom: 24px;
+
+}
+
+.testimonial-graph {
+    background: #fbfbfb;
+    margin-left: auto;
     padding: 50px;
+    text-align: center;
 }
 
 .survey-graph {
-    width: 50%;
-    background: white;
+    background: #fbfbfb;
+    margin-left: 30px;
     padding: 50px;
+    text-align: center;
 }

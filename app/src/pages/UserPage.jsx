@@ -124,16 +124,19 @@ export default function UserPage({ user, onClearUser }) {
                 </Card>
                 </div>
                 <div className="test-graph">
+                    <div className="testimonial-graph">
+                        <h1>Testimonials Graph</h1>
                     <TestimonialGraph
                         testimonial={testimonialGraph}
-                    />
-                </div>
-                <div className="survey-graph">
+                        />
+                    </div>
+                    <div className="survey-graph">
+                        <h1>Surveys Graph</h1>
                     <SurveyGraph
                         survey={surveyGraph}
-                    />
-                </div>
-           
+                        />
+                    </div>
+                    </div>
           </div>
         </div>
   );

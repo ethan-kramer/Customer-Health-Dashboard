@@ -25,34 +25,37 @@ ChartJS.register(
 
 const SurveyGraph = ({ survey }) => {
 
-    const weekData = Array.from({ length: 52 }, (_, i) => survey[i]
-        ? { RequestsSent: survey[i].RequestsSent || 0, RequestsCompleted: survey[i].RequestsCompleted || 0 }
-        : { RequestsSent: 0, RequestsCompleted: 0 }
-    );
+    console.log(survey);
+    const surveyData = Array.from({ length: 53 }, (_, i) => {
+        const index = i + 1;
+        if (survey[index]) { // if value exists
+            return {
+                RequestsSent: survey[i].RequestsSent || 0,
+                RequestsCompleted: survey[i].RequestsCompleted || 0,
+                Year: survey[i].Year || 0,
+                Week: survey[i].Week || 0
+            }; // return those elememts in array
+        } else {
+            return { RequestsSent: 0, RequestsCompleted: 0, Week: 0 }; // else return 0
+        }
+    });
 
-    const week = Array.from({ length: 52 }, (_, i) => survey[i]
-        ? { Week: survey[i].Week }
-        : { Week: i + 1 }
-    );
-    //  const week = Array.from({ length: 52 }, (_, i) => testimonial[i] ? { Week: testimonial[i].Week } : { Week: 0 });
-    console.log("HSKADJDK", week);
-    console.log("HELLOOOO", weekData);
-    const labels = week.map((week, index) => `Week ${week.Week}`);
+    const week = survey.map(item => ({ Year: item.Year, Week: item.Week }));
+    const labels = week.map((week, index) => `Week ${week.Week}, ${week.Year}`);
 
-    console.log("YAAAA", survey);
     const data = {
         labels,
         datasets: [
             {
                 label: 'Requests Sent',
-                data: weekData.map((week) => week.RequestsSent),
+                data: surveyData.map((week) => week.RequestsSent),
                 backgroundColor: 'aqua',
                 borderColor: 'black',
                 borderWidth: 1,
             },
             {
                 label: 'Requests Completed',
-                data: weekData.map((week) => week.RequestsCompleted),
+                data: surveyData.map((week) => week.RequestsCompleted),
                 backgroundColor: 'blue',
                 borderColor: 'black',
                 borderWidth: 1,
@@ -76,7 +79,7 @@ const SurveyGraph = ({ survey }) => {
             scales: {
                 y: {
                     suggestedMin: 0,
-                    suggestedMax: 52
+                    suggestedMax: survey.length
                 }
             },
             backgroundColor: 'white'
@@ -89,6 +92,7 @@ const SurveyGraph = ({ survey }) => {
             <Line
                 data={data}
                 options={options}
+                style={{ height: "400px", width: "600px" }} 
             >
             </Line>
         </div>
