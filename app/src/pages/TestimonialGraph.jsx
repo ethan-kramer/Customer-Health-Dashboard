@@ -25,21 +25,51 @@ ChartJS.register(
 
 const TestimonialGraph = ({ testimonial }) => {
 
-    const weekData = Array.from({ length: 52 }, (_, i) => testimonial[i]
-        ? { RequestsSent: testimonial[i].RequestsSent || 0, RequestsCompleted: testimonial[i].RequestsCompleted || 0 }
-        : { RequestsSent: 0, RequestsCompleted: 0 }
-    );
+    // requests: [15, 1, 11, 3, 7, 6, 0, 8, 44]
+    // weeks: //[31, 33, 37, 41, 45, 50, 1, 5, 9]
+    // result: [0,0,0,0,...15,0,1,0,0,0,0,11....]
 
-    const week = Array.from({ length: 52 }, (_, i) => testimonial[i]
-        ? { Week: testimonial[i].Week }
-        : { Week: i + 1 }
-    );
-  //  const week = Array.from({ length: 52 }, (_, i) => testimonial[i] ? { Week: testimonial[i].Week } : { Week: 0 });
-    console.log("HSKADJDK", week);
-    console.log("HELLOOOO",weekData);
-    const labels = week.map((week, index) => `Week ${week.Week}`);
+    console.log(testimonial);
 
-    console.log("YAAAA", testimonial);
+    const weekData = Array.from({ length: 53 }, (_, i) => {
+        const index = i + 1;
+        if (testimonial[index]) { // if value exists
+            return {
+                RequestsSent: testimonial[i].RequestsSent || 0,
+                RequestsCompleted: testimonial[i].RequestsCompleted || 0,
+                Year: testimonial[i].Year || 0,
+                Week: testimonial[i].Week || 0
+            }; // return those elememts in array
+        } else {
+            return { RequestsSent: 0, RequestsCompleted: 0, Week: 0 }; // else return 0
+        }
+    });
+
+      const weeksCompleted = weekData.map((data) => data.Week); // [31, 33, 37, 41, 45, 50, 1, 5, 9]
+      console.log("WEEKS", weeksCompleted); 
+
+    /*const week = Array.from({ length: 52 }, (_, i) => {
+        if (testimonial[i]) {
+            return { Week: testimonial[i].Week };
+        } else {
+            return { Week: i };
+        }
+    });*/
+
+    //console.log("Data", weekData);
+
+  //  console.log("Weeks:", week);
+
+       // const requestsCompleted = weekData.map((data) => data.RequestsCompleted);
+   // console.log(requestsCompleted);  // [15,1,11,3,7,6,0,8,44]
+
+   // const weeksCompleted = weekData.map((data) => data.Week); // [31, 33, 37, 41, 45, 50, 1, 5, 9]
+   // console.log("WEEKS", weeksCompleted); 
+
+    const week = testimonial.map(item => ({ Year: item.Year, Week: item.Week }));
+    const labels = week.map((week, index) => `Week ${week.Week}, ${week.Year}`);
+
+
     const data = {
         labels,
         datasets: [
@@ -63,16 +93,16 @@ const TestimonialGraph = ({ testimonial }) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-            legend: true
+        title: {
+            display: true,
+            text: 'My Chart Title'
         },
         scales: {
             y: {
                 suggestedMin: 0,
-                suggestedMax: 52
+                suggestedMax: testimonial.length
                 }
         },
-        backgroundColor: 'white'
 
     }
 
@@ -80,7 +110,8 @@ const TestimonialGraph = ({ testimonial }) => {
         <div>
             <Line
                 data={data}
-            options = {options}
+                options={options}
+                style={{ height: "400px", width: "600px" }} 
 
             >
             </Line>
