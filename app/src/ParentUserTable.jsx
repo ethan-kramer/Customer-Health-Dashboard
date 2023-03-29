@@ -22,7 +22,7 @@ const ParentUserTable = ({ onUserSelected }) => {
 
   // table pagination
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   // Toggle
     const [excludeZeros, setExcludeZeros] = useState(false);
@@ -143,6 +143,8 @@ const ParentUserTable = ({ onUserSelected }) => {
                 Customer Health Dashboard
             </div>
             <div className="table-container">
+                {parentUsers.length > 0 ? ( // if there are parent users then display table
+                    <>
                 <Search>
                     <SearchIconWrapper>
                         <SearchIcon />
@@ -158,14 +160,13 @@ const ParentUserTable = ({ onUserSelected }) => {
                         }}
                     />
                 </Search>
-
             <div className="toggle-button">
                 <Switch defaultChecked 
             onClick={() => setExcludeZeros(!excludeZeros)}
                 />
                 {excludeZeros ? <span>Exclude zeros</span> : <span>Include zeros</span>}
             </div>
-            {parentUsers.length > 0 ? ( // if there are parent users then display table
+           
                 <TableContainer className="parent-table" component={Paper}>
                     <Table size="small" aria-label="custom pagination table">
                         <TableHead>
@@ -174,10 +175,10 @@ const ParentUserTable = ({ onUserSelected }) => {
                                     Company                     
                                 </TableCell>
                                 <TableCell>
-                                    Average Requests Sent
+                                    Avg. Testimonials Sent
                                 </TableCell>
                                 <TableCell>
-                                    Average Requests Completed
+                                    Avg.Testimonials Completed
                                 </TableCell>
                                 <TableCell>
                                     Completion Percentage
@@ -194,10 +195,8 @@ const ParentUserTable = ({ onUserSelected }) => {
                                     <TableCell>{parentUser.UserID}</TableCell>  
                                     <TableCell>{parentUser.AverageRequestsSent}</TableCell>  
                                     <TableCell>{parentUser.AverageRequestsCompleted}</TableCell>  
-                                    <TableCell>{(parentUser.CompletionPercentage * 100).toFixed(3)}%</TableCell>
+                                    <TableCell>{(parentUser.CompletionPercentage * 100).toFixed(2)}%</TableCell>
                                 </TableRow>
-
-
                             ))}
                         </TableBody>
                     </Table>
@@ -209,13 +208,14 @@ const ParentUserTable = ({ onUserSelected }) => {
                         rowsPerPage={rowsPerPage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </TableContainer>
+                        </TableContainer>
+                        </>
             ) : (
                 <div>Loading...</div>
             )}
             </div>
         </div>
     )
- 
 };
+            
 export default ParentUserTable;
