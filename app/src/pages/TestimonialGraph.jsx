@@ -78,7 +78,7 @@ const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks wi
 
     console.log("data: ", formatted_dictionary);
 
-    const week = testimonial.map(item => ({ Year: item.Year, Week: item.Week }));
+    const week = formatted_dictionary.map(item => ({ Year: item.Year, Week: item.Week }));
     const labels = week.map((week, index) => `Week ${week.Week}, ${week.Year}`);
 
     const data = {
@@ -86,14 +86,14 @@ const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks wi
         datasets: [
             {
                 label: 'Requests Sent',
-                data: weekData.map((week) => week.RequestsSent),
+                data: formatted_dictionary.map((week) => week.RequestsSent),
                 backgroundColor: 'aqua',
                 borderColor: 'black',
                 borderWidth: 1,
             },
                 {
                 label: 'Requests Completed',
-                data: weekData.map((week) => week.RequestsCompleted),
+                    data: formatted_dictionary.map((week) => week.RequestsCompleted),
                 backgroundColor: 'blue',
                 borderColor: 'black',
                 borderWidth: 1,
