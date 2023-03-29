@@ -30,13 +30,15 @@ const ParentUserTable = ({ onUserSelected }) => {
 
   const handleChangePage = (event, newPage) => {
     // update page when it is changed
-    setPage(newPage);
+      setPage(newPage);
+      setSearchTerm("");
   };
 
   const handleChangeRowsPerPage = (event) => {
     // update rows per page when changing amount desired
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    setSearchTerm("");
     };
 
     function fetchData(toggleIsOn) {
@@ -80,9 +82,17 @@ const ParentUserTable = ({ onUserSelected }) => {
 
   function handleTableRowClick(parentUser) {
     // call the on user selected prop method
-    onUserSelected(parentUser);
+      onUserSelected(parentUser); onUserSelected(parentUser);
     }
 
+  // search bar save state
+    const [searchTerm, setSearchTerm] = useState("");
+
+  // adjsut parent user based on search 
+    const filteredParentUsers = parentUsers.filter((parentUser) => {
+        return parentUser.UserID.toLowerCase().includes(searchTerm.toLowerCase())
+            || parentUser.AverageRequestsSent.toString().toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
   // create a SearchBar component
     const Search = styled('div')(({ theme, tableWidth }) => ({
@@ -140,6 +150,12 @@ const ParentUserTable = ({ onUserSelected }) => {
                     <StyledInputBase
                         placeholder="Search…"
                         inputProps={{ 'aria-label': 'search' }}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onFocus={() => {
+                            setHandleTableRowClick(null);
+                            setInputFocus(true);
+                        }}
                     />
                 </Search>
 
@@ -169,7 +185,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {parentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
+                            {filteredParentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
                                 <TableRow
                                     key={parentUser.UserID}
                                     onClick={() => handleTableRowClick(parentUser)}
