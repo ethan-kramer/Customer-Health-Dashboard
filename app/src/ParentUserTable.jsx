@@ -22,7 +22,7 @@ const ParentUserTable = ({ onUserSelected }) => {
 
   // table pagination
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   // Toggle
     const [excludeZeros, setExcludeZeros] = useState(false);

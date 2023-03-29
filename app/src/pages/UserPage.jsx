@@ -86,11 +86,11 @@ export default function UserPage({ user, onClearUser }) {
           </Breadcrumbs>
             {/* Title */}
             <div className="customer-health-heading">
-                <span>{user.UserID} Dashboard </span>
+                <span>{user.UserID}'s Dashboard </span>
           </div>
             {/* Stats Cards */}
           <div style={{ display: 'flex' }}>
-                <Card className="card" style={{ borderRadius: '20px', backgroundColor: '#0080001c' }}>
+                    <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
                     <CardContent className="content" style={{} }>
                         <Typography variant="h1" className="card-info">
                             {testimonialCount}
@@ -101,7 +101,7 @@ export default function UserPage({ user, onClearUser }) {
                     </CardContent>
                 </Card>
 
-                <Card className="card" style={{ borderRadius: '20px',backgroundColor: '#f9f9f9' }}>
+                    <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
                     <CardContent className="content" style={{ }}>
                         <Typography variant="h1" className="card-info">
                             {averageRating}/5
@@ -112,7 +112,7 @@ export default function UserPage({ user, onClearUser }) {
                     </CardContent>
                 </Card>
 
-                <Card className="card" style={{ borderRadius: '20px', backgroundColor: '#f100001a' }}>
+                    <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
                     <CardContent className="content" style={{  }}>
                         <Typography variant="h1" className="card-info">
                             {surveyCount}

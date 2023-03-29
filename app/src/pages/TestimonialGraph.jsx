@@ -29,11 +29,11 @@ const TestimonialGraph = ({ testimonial }) => {
     // weeks: //[31, 33, 37, 41, 45, 50, 1, 5, 9]
     // result: [0,0,0,0,...15,0,1,0,0,0,0,11....]
 
-    console.log(testimonial);
+    console.log("TESTIMONIAL",testimonial);
 
-    const weekData = Array.from({ length: 53 }, (_, i) => {
-        const index = i + 1;
-        if (testimonial[index]) { // if value exists
+    const weekData = Array.from({ length: 52 }, (_, i) => {
+       // const index = i + 1;
+        if (testimonial[i]) { // if value exists
             return {
                 RequestsSent: testimonial[i].RequestsSent || 0,
                 RequestsCompleted: testimonial[i].RequestsCompleted || 0,
@@ -41,9 +41,11 @@ const TestimonialGraph = ({ testimonial }) => {
                 Week: testimonial[i].Week || 0
             }; // return those elememts in array
         } else {
-            return { RequestsSent: 0, RequestsCompleted: 0, Week: 0 }; // else return 0
+            return { RequestsSent: 0, RequestsCompleted: 0, Week: i }; // else return 0
         }
     });
+
+    console.log("WEEKDATA", weekData);
 
       const weeksCompleted = weekData.map((data) => data.Week); // [31, 33, 37, 41, 45, 50, 1, 5, 9]
       console.log("WEEKS", weeksCompleted); 
