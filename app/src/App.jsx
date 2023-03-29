@@ -4,7 +4,7 @@ import UserListPage from './pages/UserListPage.jsx';
 import UserPage from './pages/UserPage.jsx';
 
 function App() {
-  const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
 
   const handleUserSelected = (user) => {
     setSelectedUser(user);

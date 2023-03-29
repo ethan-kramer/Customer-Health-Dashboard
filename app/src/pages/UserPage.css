@@ -22,13 +22,14 @@
 }
 
 .customer-health-heading {
-    font-size: 35px;
+    font-size: 50px;
     color: #333;
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 20px;
     text-align: left;
     text-transform: capitalize;
+
 }
 
 .my-breadcrumbs {
@@ -41,7 +42,7 @@
 
 .card {
     width: 25%;
-    max-width: 500px;
+    max-width: 400px;
     height: 300px;
     border-radius: 15px;
     box-shadow: 10px 10px 10px rgba(2, 0, 0, 0.1);
@@ -110,4 +111,32 @@
 
 .chart-card .media {
     height: 500px;
+}
+
+.test-graph {
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    margin-bottom: 24px;
+
+}
+
+.testimonial-graph {
+    background: #fbfbfb;
+    margin-left: auto;
+    padding: 50px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 2px 2px 1px -1px rgba(0,0,0,0.2), 0px 2px 2px 2px rgb(90 86 86 / 14%), 2px 2px 3px 2px rgb(98 77 77 / 12%);
+}
+
+.survey-graph {
+    background: #fbfbfb;
+    margin-left: 30px;
+    padding: 50px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 2px 2px 1px -1px rgba(0,0,0,0.2), 0px 2px 2px 2px rgb(90 86 86 / 14%), 2px 2px 3px 2px rgb(98 77 77 / 12%);
 }
