@@ -23,16 +23,18 @@ ChartJS.register(
     LineController
     )
 
-const TestimonialGraph = ({ testimonial }) => {
+const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks with data and the number
 
-    // requests: [15, 1, 11, 3, 7, 6, 0, 8, 44]
-    // weeks: //[31, 33, 37, 41, 45, 50, 1, 5, 9]
-    // result: [0,0,0,0,...15,0,1,0,0,0,0,11....]
-
-    console.log("TESTIMONIAL",testimonial);
+    function getWeek() {
+        const currentDate = new Date();
+        const startDate = new Date(currentDate.getFullYear(), 0, 1);
+        const days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+        const weekNumber = Math.ceil(days / 7);
+        return weekNumber;
+    }
 
     const weekData = Array.from({ length: 52 }, (_, i) => {
-       // const index = i + 1;
+        // const index = i + 1;
         if (testimonial[i]) { // if value exists
             return {
                 RequestsSent: testimonial[i].RequestsSent || 0,
@@ -45,32 +47,20 @@ const TestimonialGraph = ({ testimonial }) => {
         }
     });
 
-    console.log("WEEKDATA", weekData);
+    const requestsCompleted = weekData.map((data) => data.RequestsCompleted);   // num requests completed [15,1,11,3,7,6,0,8,44]        (this data is for Redi_carpet)
+    const weeksCompleted = weekData.map((data) => data.Week);                   // corresponding weeks    [31, 33, 37, 41, 45, 50, 1, 5, 9]
 
-      const weeksCompleted = weekData.map((data) => data.Week); // [31, 33, 37, 41, 45, 50, 1, 5, 9]
-      console.log("WEEKS", weeksCompleted); 
+    const currentWeek = getWeek();
+    const weeks = Array.from({ length: 52 }, (_, i) => (currentWeek + i > 52 ? currentWeek + i - 52 : currentWeek + i));
+    const combinedArray = weeks.map((week) => {
+        const index = weeksCompleted.indexOf(week);
+        return index !== -1 ? requestsCompleted[index] : 0;
+    });
 
-    /*const week = Array.from({ length: 52 }, (_, i) => {
-        if (testimonial[i]) {
-            return { Week: testimonial[i].Week };
-        } else {
-            return { Week: i };
-        }
-    });*/
-
-    //console.log("Data", weekData);
-
-  //  console.log("Weeks:", week);
-
-       // const requestsCompleted = weekData.map((data) => data.RequestsCompleted);
-   // console.log(requestsCompleted);  // [15,1,11,3,7,6,0,8,44]
-
-   // const weeksCompleted = weekData.map((data) => data.Week); // [31, 33, 37, 41, 45, 50, 1, 5, 9]
-   // console.log("WEEKS", weeksCompleted); 
-
+    console.log("Results with nulls: ", combinedArray);
+    
     const week = testimonial.map(item => ({ Year: item.Year, Week: item.Week }));
     const labels = week.map((week, index) => `Week ${week.Week}, ${week.Year}`);
-
 
     const data = {
         labels,
@@ -120,5 +110,6 @@ const TestimonialGraph = ({ testimonial }) => {
             </div>
       )
 }
+
 
 export default TestimonialGraph
