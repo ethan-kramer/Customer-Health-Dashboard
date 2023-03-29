@@ -45,14 +45,12 @@ const ParentUserTable = ({ onUserSelected }) => {
 
         if (toggleIsOn) { // check if true
             queryString = '?excludeZeros=true';
-            setButtonText('Exclude 0');
 
             fetch(url + queryString) // then fetch completion > 0
                 .then(response => response.json())
                 .then((json) => setParentUsers(json));
         }
         else { // otherwise fetch all
-            setButtonText('Include 0');
             fetch(url)
                 .then(response => response.json())
                 .then((json) => setParentUsers(json));
@@ -148,7 +146,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                 <Switch defaultChecked 
             onClick={() => setExcludeZeros(!excludeZeros)}
                 />
-                {excludeZeros ? <span>Exclude zeros</span> : <span>Include zeros</span>}
+                {<span>Include Zeros</span>}
             </div>
            
                 <TableContainer className="parent-table" component={Paper}>
