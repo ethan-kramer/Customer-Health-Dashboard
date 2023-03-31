@@ -86,7 +86,7 @@ export default function UserPage({ user, onClearUser }) {
           </Breadcrumbs>
             {/* Title */}
             <div className="customer-health-heading">
-                <span>{user.UserID}'s Dashboard </span>
+                <span>{user.UserID} </span>
           </div>
             {/* Stats Cards */}
           <div style={{ display: 'flex' }}>

@@ -63,16 +63,6 @@ const ParentUserTable = ({ onUserSelected }) => {
         fetchData(excludeZeros);
     }, [excludeZeros]);
 
-/*
-  // Fetching data from API
-  useEffect(() => {
-    setLoading(true);
-      fetch('https://localhost:7107/api/v1/data/hometable')
-      .then((response) => response.json())
-      .then((json) => setParentUsers(json))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, []); // empty dependency array bc need effect to run once for fetching API data */
 
   if (loading) return <div>loading...</div>;
 
@@ -156,6 +146,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                             setHandleTableRowClick(null);
                             setInputFocus(true);
                         }}
+                        autoFocus // add autoFocus prop here
                     />
                 </Search>
             <div className="toggle-button">
