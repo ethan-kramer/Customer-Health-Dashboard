@@ -25,10 +25,19 @@ ChartJS.register(
 
 const SurveyGraph = ({ survey }) => {
 
-    console.log(survey);
-    const surveyData = Array.from({ length: 53 }, (_, i) => {
-        const index = i + 1;
-        if (survey[index]) { // if value exists
+    function getWeek() {
+        const currentDate = new Date();
+        const startDate = new Date(currentDate.getFullYear(), 0, 1);
+        const days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+        const weekNumber = Math.ceil(days / 7);
+        return weekNumber;
+    }
+
+    const currentWeek = getWeek();
+
+    const weekData = Array.from({ length: 52 }, (_, i) => {
+        // const index = i + 1;
+        if (survey[i]) { // if value exists
             return {
                 RequestsSent: survey[i].RequestsSent || 0,
                 RequestsCompleted: survey[i].RequestsCompleted || 0,
@@ -36,11 +45,34 @@ const SurveyGraph = ({ survey }) => {
                 Week: survey[i].Week || 0
             }; // return those elememts in array
         } else {
-            return { RequestsSent: 0, RequestsCompleted: 0, Week: 0 }; // else return 0
+            return { RequestsSent: 0, RequestsCompleted: 0, Week: i }; // else return 0
         }
     });
 
-    const week = survey.map(item => ({ Year: item.Year, Week: item.Week }));
+    const requestsCompleted = weekData.map((data) => data.RequestsCompleted);   
+    const requestsSent = weekData.map((data) => data.RequestsSent);               
+    const weeksCompleted = weekData.map((data) => data.Week);  
+
+    const weeks = Array.from({ length: 53 }, (_, i) => (currentWeek + i > 52 ? currentWeek + i - 52 : currentWeek + i));
+    const formatted_dictionary = [];
+    for (let i = 1; i < weeks.length; i++) {
+        const weekData = {
+            RequestsSent: 0,
+            RequestsCompleted: 0,
+            Year: currentWeek - weeks[i] >= 0 ? new Date().getFullYear() : new Date().getFullYear() - 1,
+            Week: weeks[i],
+        };
+        const index = weeksCompleted.indexOf(weekData.Week);
+        if (index !== -1) {
+            weekData.RequestsCompleted = requestsCompleted[index];
+            weekData.RequestsSent = requestsSent[index];
+        }
+        formatted_dictionary.push(weekData);
+    }
+
+    console.log("survey data: ", formatted_dictionary);
+
+    const week = formatted_dictionary.map(item => ({ Year: item.Year, Week: item.Week }));
     const labels = week.map((week, index) => `Week ${week.Week}, ${week.Year}`);
 
     const data = {
@@ -48,14 +80,14 @@ const SurveyGraph = ({ survey }) => {
         datasets: [
             {
                 label: 'Requests Sent',
-                data: surveyData.map((week) => week.RequestsSent),
+                data: formatted_dictionary.map((week) => week.RequestsSent),
                 backgroundColor: 'aqua',
                 borderColor: 'black',
                 borderWidth: 1,
             },
             {
                 label: 'Requests Completed',
-                data: surveyData.map((week) => week.RequestsCompleted),
+                data: formatted_dictionary.map((week) => week.RequestsCompleted),
                 backgroundColor: 'blue',
                 borderColor: 'black',
                 borderWidth: 1,
