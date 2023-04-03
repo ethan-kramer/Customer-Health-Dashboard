@@ -176,7 +176,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                         </TableHead>
                         <TableBody>
                             {filteredParentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
-                                <TableRow
+                                <TableRow className="table-text"
                                     key={parentUser.UserID}
                                     onClick={() => handleTableRowClick(parentUser)}
                                     sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}

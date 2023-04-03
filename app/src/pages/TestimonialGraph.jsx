@@ -83,14 +83,14 @@ const TestimonialGraph = ({ testimonial }) => { // testimonial: list of weeks wi
             {
                 label: 'Requests Sent',
                 data: formatted_dictionary.map((week) => week.RequestsSent),
-                backgroundColor: 'aqua',
+                backgroundColor: '#baf33c',
                 borderColor: 'black',
                 borderWidth: 1,
             },
                 {
                 label: 'Requests Completed',
-                    data: formatted_dictionary.map((week) => week.RequestsCompleted),
-                backgroundColor: 'blue',
+                data: formatted_dictionary.map((week) => week.RequestsCompleted),
+                backgroundColor: '#455c11',
                 borderColor: 'black',
                 borderWidth: 1,
             }

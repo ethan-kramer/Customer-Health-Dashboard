@@ -81,14 +81,14 @@ const SurveyGraph = ({ survey }) => {
             {
                 label: 'Requests Sent',
                 data: formatted_dictionary.map((week) => week.RequestsSent),
-                backgroundColor: 'aqua',
+                backgroundColor: '#baf33c',
                 borderColor: 'black',
                 borderWidth: 1,
             },
             {
                 label: 'Requests Completed',
                 data: formatted_dictionary.map((week) => week.RequestsCompleted),
-                backgroundColor: 'blue',
+                backgroundColor: '#455c11',
                 borderColor: 'black',
                 borderWidth: 1,
             }

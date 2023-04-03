@@ -4,6 +4,7 @@ import Link from '@mui/material/Link';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { Card, CardContent, CardMedia } from '@mui/material';
+import { FaRegStar, FaRegPaperPlane, FaRegCommentDots } from 'react-icons/fa';
 
 
 import './UserPage.css';
@@ -80,7 +81,7 @@ export default function UserPage({ user, onClearUser }) {
           Home
         </Link>
         <Link color="inherit" href="/parentUsers">
-          {user.UserID}
+          {user.UserID} 
 
                 </Link>
           </Breadcrumbs>
@@ -91,9 +92,14 @@ export default function UserPage({ user, onClearUser }) {
             {/* Stats Cards */}
           <div style={{ display: 'flex' }}>
                     <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
-                    <CardContent className="content" style={{} }>
+                        <CardContent className="content" style={{}}>
+                            <Typography variant="h1" className="card-info">
+                                <FaRegCommentDots size={60} />
+                            </Typography>
+
                         <Typography variant="h1" className="card-info">
-                            {testimonialCount}
+                                {testimonialCount}
+                        
                         </Typography>
                         <Typography variant="h5" component="h2" className="title">
                             Total Testimonials
@@ -102,7 +108,11 @@ export default function UserPage({ user, onClearUser }) {
                 </Card>
 
                     <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
-                    <CardContent className="content" style={{ }}>
+                        <CardContent className="content" style={{}}>
+                            <Typography variant="h1" className="card-info">
+                                <FaRegStar size={60} />
+                            </Typography>
+
                         <Typography variant="h1" className="card-info">
                             {averageRating}/5
                         </Typography>
@@ -113,9 +123,13 @@ export default function UserPage({ user, onClearUser }) {
                 </Card>
 
                     <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
-                    <CardContent className="content" style={{  }}>
+                        <CardContent className="content" style={{}}>
+                            <Typography variant="h1" className="card-info">
+                                <FaRegPaperPlane size={60} />
+                            </Typography>
+
                         <Typography variant="h1" className="card-info">
-                            {surveyCount}
+                                {surveyCount}  
                         </Typography>
                         <Typography variant="h5" component="h2" className="title">
                             Total Surveys
@@ -132,9 +146,14 @@ export default function UserPage({ user, onClearUser }) {
                     </div>
                     <div className="survey-graph">
                         <h1>Surveys Graph</h1>
-                    <SurveyGraph
-                        survey={surveyGraph}
-                        />
+                        <div>
+                            {surveyGraph && surveyGraph.length ? ( // check array and if empty, display no data
+                                <SurveyGraph survey={surveyGraph} />
+                            ) : (
+                                <p>No survey data</p>
+                            )}
+                        </div>
+
                     </div>
                     </div>
           </div>
