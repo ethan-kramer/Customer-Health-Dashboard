@@ -17,7 +17,7 @@
 }
 
 .table-header {
-    font-size: 10px;
+    font-size: 20px;
     margin-bottom: 20px;
     color: #685959;
     text-transform: uppercase;
@@ -45,10 +45,15 @@
     }
 }
 
-.customer-health-heading {
-    font-size: 2rem;
-    text-align: center;
+.main-health-heading {
+    font-size: 60px;
+    font-weight: lighter;
+    letter-spacing: 0.1rem;
     color: #333;
-    margin-top: 2rem;
-    margin-bottom: 3rem;
+    padding: 3%;
+    padding-left: 12%;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    text-align: left;
+    text-transform: capitalize;
 }
