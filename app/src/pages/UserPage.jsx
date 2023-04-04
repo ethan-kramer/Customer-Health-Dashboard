@@ -67,7 +67,8 @@ export default function UserPage({ user, onClearUser }) {
     return (
         <div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {/* Breadcrumbs */}
+                {/* Breadcrumbs */}
+                <div  className = "user-nav">
       <Breadcrumbs
         aria-label="breadcrumb"
         className="my-breadcrumbs"
@@ -88,31 +89,28 @@ export default function UserPage({ user, onClearUser }) {
             {/* Title */}
             <div className="customer-health-heading">
                 <span>{user.UserID} </span>
-          </div>
+                    </div>
+                </div>
             {/* Stats Cards */}
-          <div style={{ display: 'flex' }}>
+          <div  className="card-container" >
                     <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
                         <CardContent className="content" style={{}}>
                             <Typography variant="h1" className="card-info">
                                 <FaRegCommentDots size={60} />
                             </Typography>
-
                         <Typography variant="h1" className="card-info">
                                 {testimonialCount}
-                        
                         </Typography>
                         <Typography variant="h5" component="h2" className="title">
                             Total Testimonials
                         </Typography>
                     </CardContent>
                 </Card>
-
                     <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
                         <CardContent className="content" style={{}}>
                             <Typography variant="h1" className="card-info">
                                 <FaRegStar size={60} />
                             </Typography>
-
                         <Typography variant="h1" className="card-info">
                             {averageRating}/5
                         </Typography>
@@ -121,13 +119,11 @@ export default function UserPage({ user, onClearUser }) {
                         </Typography>
                     </CardContent>
                 </Card>
-
                     <Card className="card" style={{ borderRadius: '20px', backgroundColor: 'rgb(249, 249, 249)' }}>
                         <CardContent className="content" style={{}}>
                             <Typography variant="h1" className="card-info">
                                 <FaRegPaperPlane size={60} />
                             </Typography>
-
                         <Typography variant="h1" className="card-info">
                                 {surveyCount}  
                         </Typography>
@@ -135,8 +131,9 @@ export default function UserPage({ user, onClearUser }) {
                             Total Surveys
                         </Typography>
                     </CardContent>
-                </Card>
+                    </Card>
                 </div>
+          
                 <div className="test-graph">
                     <div className="testimonial-graph">
                         <h1>Testimonials Graph</h1>
@@ -144,19 +141,15 @@ export default function UserPage({ user, onClearUser }) {
                         testimonial={testimonialGraph}
                         />
                     </div>
-                    <div className="survey-graph">
-                        <h1>Surveys Graph</h1>
-                        <div>
-                            {surveyGraph && surveyGraph.length ? ( // check array and if empty, display no data
-                                <SurveyGraph survey={surveyGraph} />
-                            ) : (
-                                <p>No survey data</p>
-                            )}
+                    {surveyGraph && surveyGraph.length ? ( // if no data,skip, else show graph
+                        <div className="survey-graph">
+                            <h1>Surveys Graph</h1>
+                            <SurveyGraph survey={surveyGraph} />
                         </div>
-
-                    </div>
-                    </div>
-          </div>
+                    ) : null}
+                  
+                </div>
+            </div>
         </div>
   );
 }

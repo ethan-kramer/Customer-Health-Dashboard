@@ -127,8 +127,10 @@ const ParentUserTable = ({ onUserSelected }) => {
 
     return (
         <div>
-            <div className="customer-health-heading">
+            <div className = "user-nav">
+            <div className="main-health-heading">
                 Customer Health Dashboard
+                </div>
             </div>
             <div className="table-container">
                 {parentUsers.length > 0 ? ( // if there are parent users then display table
@@ -159,7 +161,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                 <TableContainer className="parent-table" component={Paper}>
                     <Table size="small" aria-label="custom pagination table">
                         <TableHead>
-                            <TableRow className="table-header" sx={{ backgroundColor: '#B6D770' }}> 
+                                <TableRow className="table-header" sx={{ padding: '10px', backgroundColor: '#B6D770' }}> 
                                 <TableCell>
                                     Company                     
                                 </TableCell>
