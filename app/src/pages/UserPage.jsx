@@ -136,14 +136,14 @@ export default function UserPage({ user, onClearUser }) {
           
                 <div className="test-graph">
                     <div className="testimonial-graph">
-                        <h1>Testimonials Graph</h1>
+                        <h1>Testimonials This Year</h1>
                     <TestimonialGraph
                         testimonial={testimonialGraph}
                         />
                     </div>
                     {surveyGraph && surveyGraph.length ? ( // if no data,skip, else show graph
                         <div className="survey-graph">
-                            <h1>Surveys Graph</h1>
+                            <h1>Surveys This Year</h1>
                             <SurveyGraph survey={surveyGraph} />
                         </div>
                     ) : null}
