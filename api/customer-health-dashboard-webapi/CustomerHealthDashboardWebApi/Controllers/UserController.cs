@@ -120,50 +120,65 @@ namespace CustomerHealthDashboardWebApi.Controllers
 
 
         [HttpGet("/api/v1/data/hometable")]
-        public dynamic GetHomeTable([FromQuery(Name = "excludeZeros")] bool excludeZeros)
+        public dynamic GetHomeTable()
         {
            // excludeZeros = true;
-            string baseQuery =
-            " WITH TestimonialStats AS (" +
+            string query =
+            " ; WITH WEEKLY_STATS AS (" +
             " SELECT" +
-            " TestimonialRequests.UserID," +
-            " DATEPART(YEAR, TestimonialRequests.DateTimeStamp) as [Year]," +
-            " DATEPART(WEEK, TestimonialRequests.DateTimeStamp) AS [Week]," +
-            " COUNT(TestimonialRequests.RequestID) AS [RequestsSent]," +
-            " COUNT(Testimonials.TestimonialID) AS [RequestsCompleted]," +
-            " CAST(COUNT(Testimonials.TestimonialID) AS FLOAT) / NULLIF(CAST(COUNT(TestimonialRequests.RequestID) AS FLOAT), 0) AS [CompletionPercentage]" +
-            " FROM TestimonialRequests" +
-            " LEFT JOIN Testimonials ON Testimonials.requestID = TestimonialRequests.RequestID" +
-            " LEFT JOIN UserInfo ON TestimonialRequests.UserID = UserInfo.Username" +
-            " WHERE" +
-            " TestimonialRequests.DateTimeStamp IS NOT NULL" +
-            " AND" +
-            " TestimonialRequests.DateTimeStamp > DATEADD(YEAR, -1, GETDATE())" +
-            " AND" +
-            " TestimonialRequests.DateTimeStamp < GETDATE()" +
-            " AND" +
-            " UserInfo.Deleted IS NULL" +
-            " GROUP BY" +
-            " TestimonialRequests.UserID," +
-            " DATEPART(YEAR, TestimonialRequests.DateTimestamp)," +
-            " DATEPART(WEEK, TestimonialRequests.DATETIMESTAMP)" +
-            " ) SELECT" +
-            " UserID," +
-            " AVG(CAST(RequestsSent AS FLOAT)) as AverageRequestsSent," +
-            " AVG(CAST(RequestsCompleted AS FLOAT)) as AverageRequestsCompleted," +
-            " AVG(CAST(CompletionPercentage AS FLOAT)) as CompletionPercentage" +
-            " FROM TestimonialStats";
+            " [CAL_YEAR]" +
+            " ,[CAL_WEEK]" +
+            " ,COALESCE(PUI.Username, UI.Username) AS [ParentUsername]" +
+            " ,COALESCE(SUM(TR_SENT), 0) AS SUM_TR_SENT" +
+            " ,COALESCE(SUM(TR_COMPLETED), 0) AS SUM_TR_COMPLETED" +
+            " ,COALESCE(SUM(SR_SENT), 0) AS SUM_SR_SENT" +
+            " ,COALESCE(SUM(SR_COMPLETED), 0) AS SUM_SR_COMPLETED" +
+            " FROM UserInfo UI" +
+            " LEFT JOIN UserInfo PUI ON PUI.Username = UI.ParentUser" +
+            " CROSS JOIN (" +
+            " SELECT DISTINCT" +
+            " DATEPART(YEAR, DateTimeStamp) AS [CAL_YEAR]," +
+            " DATEPART(WEEK, DateTimeStamp) AS [CAL_WEEK]" +
+            " FROM Testimonials" +
+            " WHERE DateTimeStamp > DATEADD(MONTH, -6, GETDATE())" +
+            " ) AS [CALENDAR]" +
+            " LEFT JOIN (" +
+            " SELECT" +
+            " TR.UserID AS TR_USERNAME," +
+            " DATEPART(YEAR, TR.DateTimeStamp) AS [TR_YEAR]," +
+            " DATEPART(WEEK, TR.DateTimeStamp) AS [TR_WEEK]," +
+            " COALESCE(COUNT(TR.RequestID), 0) AS TR_SENT," +
+            " COALESCE(COUNT(T.TestimonialID), 0) AS TR_COMPLETED" +
+            " FROM TestimonialRequests TR" +
+            " LEFT JOIN Testimonials T ON T.requestID = TR.RequestID" +
+            " WHERE TR.DateTimeStamp > DATEADD(MONTH, -6, GETDATE())" +
+            " GROUP BY TR.UserID, DATEPART(YEAR, TR.DateTimeStamp), DATEPART(WEEK, TR.DateTimeStamp)" +
+            " ) AS TR_STATS ON TR_USERNAME = UI.Username AND [CAL_YEAR] = [TR_YEAR] AND [CAL_WEEK] = [TR_WEEK]" +
+            " LEFT JOIN (" +
+            " SELECT" +
+            " SR.Username AS SR_USERNAME," +
+            " DATEPART(YEAR, SR.DateTimeStamp) AS [SR_YEAR]," +
+            " DATEPART(WEEK, SR.DateTimeStamp) AS [SR_WEEK]," +
+            " COALESCE(COUNT(SR.RequestID), 0) AS SR_SENT," +
+            " COALESCE(COUNT(ST.id), 0) AS SR_COMPLETED" +
+            " FROM surveyRequests SR" +
+            " LEFT JOIN surveyTaken ST ON ST.surveyRequestID = SR.RequestID" +
+            " WHERE SR.DateTimeStamp > DATEADD(MONTH, -6, GETDATE())" +
+            " GROUP BY SR.Username, DATEPART(YEAR, SR.DateTimeStamp), DATEPART(WEEK, SR.DateTimeStamp)" +
+            " ) AS SR_STATS ON SR_USERNAME = UI.Username AND [CAL_YEAR] = [SR_YEAR] AND [CAL_WEEK] = [SR_WEEK]" +
+            " WHERE COALESCE(PUI.Deleted, UI.Deleted) IS NULL" +
+            " GROUP BY [CAL_YEAR], [CAL_WEEK], COALESCE(PUI.Username, UI.Username)" +
+            " )" +
+            " SELECT" +
+            " ParentUsername" +
+            " , AVG(SUM_TR_SENT) AS AVG_TR_SENT" +
+            " , AVG(SUM_TR_COMPLETED) AS AVG_TR_COMPLETED" +
+            " , AVG(SUM_SR_SENT) AS AVG_SR_SENT" +
+            " , AVG(SUM_SR_COMPLETED) AS AVG_SR_COMPLETED" +
+            " FROM WEEKLY_STATS" +
+            " GROUP BY ParentUsername" +
+            " ORDER BY AVG_SR_SENT DESC, AVG_SR_COMPLETED DESC, AVG_TR_SENT DESC, AVG_TR_COMPLETED DESC";
 
-            if (excludeZeros)
-            {
-                baseQuery += " WHERE CompletionPercentage > 0";
-            }
-
-            var query = baseQuery +
-                " GROUP BY" +
-                " UserID" +
-                " ORDER BY" +
-                " CompletionPercentage ASC;";
 
             return _dbContext.ExecuteQueryAsDictionary(query);
         }

@@ -24,10 +24,6 @@ const ParentUserTable = ({ onUserSelected }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
-  // Toggle
-    const [excludeZeros, setExcludeZeros] = useState(false);
-    const [buttonText, setButtonText] = useState('Exclude 0');
-
   const handleChangePage = (event, newPage) => {
     // update page when it is changed
       setPage(newPage);
@@ -41,27 +37,12 @@ const ParentUserTable = ({ onUserSelected }) => {
     setSearchTerm("");
     };
 
-    function fetchData(toggleIsOn) {
-        const url = 'https://localhost:7107/api/v1/data/hometable';
-        let queryString = '';
-
-        if (toggleIsOn) { // check if true
-            queryString = '?excludeZeros=true';
-
-            fetch(url + queryString) // then fetch completion > 0
-                .then(response => response.json())
-                .then((json) => setParentUsers(json));
-        }
-        else { // otherwise fetch all
-            fetch(url)
-                .then(response => response.json())
-                .then((json) => setParentUsers(json));
-        }
-    }
-
-    useEffect(() => { // initialized to false (zeros show)
-        fetchData(excludeZeros);
-    }, [excludeZeros]);
+    // Hometable data
+    useEffect(() => {
+        fetch(`https://localhost:7107/api/v1/data/hometable`)
+            .then((response) => response.json())
+            .then((json) => setParentUsers(json))
+    }, []);
 
 
   if (loading) return <div>loading...</div>;
@@ -78,8 +59,7 @@ const ParentUserTable = ({ onUserSelected }) => {
 
   // adjsut parent user based on search 
     const filteredParentUsers = parentUsers.filter((parentUser) => {
-        return parentUser.UserID.toLowerCase().includes(searchTerm.toLowerCase())
-            || parentUser.AverageRequestsSent.toString().toLowerCase().includes(searchTerm.toLowerCase());
+        return parentUser.ParentUsername.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
   // create a SearchBar component
@@ -150,14 +130,7 @@ const ParentUserTable = ({ onUserSelected }) => {
                         }}
                         autoFocus // add autoFocus prop here
                     />
-                </Search>
-            <div className="toggle-button">
-                <Switch defaultChecked 
-            onClick={() => setExcludeZeros(!excludeZeros)}
-                />
-                {<span>Include Zeros</span>}
-            </div>
-           
+                </Search>           
                 <TableContainer className="parent-table" component={Paper}>
                     <Table size="small" aria-label="custom pagination table">
                         <TableHead>
@@ -172,21 +145,25 @@ const ParentUserTable = ({ onUserSelected }) => {
                                     Avg.Testimonials Completed
                                 </TableCell>
                                 <TableCell>
-                                    Completion Percentage
+                                Avg. Surveys Sent
+                                </TableCell>
+                                <TableCell>
+                                Avg. Surveys Completed
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {filteredParentUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((parentUser) => (
                                 <TableRow className="table-text"
-                                    key={parentUser.UserID}
+                                    key={parentUser.ParentUsername}
                                     onClick={() => handleTableRowClick(parentUser)}
                                     sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}
                                 >
-                                    <TableCell>{parentUser.UserID}</TableCell>  
-                                    <TableCell>{parentUser.AverageRequestsSent}</TableCell>  
-                                    <TableCell>{parentUser.AverageRequestsCompleted}</TableCell>  
-                                    <TableCell>{(parentUser.CompletionPercentage * 100).toFixed(2)}%</TableCell>
+                                    <TableCell>{parentUser.ParentUsername}</TableCell>  
+                                    <TableCell>{parentUser.AVG_TR_SENT}</TableCell>  
+                                    <TableCell>{parentUser.AVG_TR_COMPLETED}</TableCell>  
+                                    <TableCell>{parentUser.AVG_SR_SENT}</TableCell>
+                                    <TableCell>{parentUser.AVG_SR_COMPLETED}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

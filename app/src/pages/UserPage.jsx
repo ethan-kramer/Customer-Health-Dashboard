@@ -17,7 +17,7 @@ export default function UserPage({ user, onClearUser }) {
     const [testimonialCount, setTestimonialCount] = useState([]);
     const [surveyCount, setSurveyCount] = useState([]);
     const [averageRating, setAverageRating] = useState([]);
-    const [userID, setUserID] = useState(user.UserID);
+    const [userID, setUserID] = useState(user.ParentUsername);
 
     const [surveyGraph, setSurveyGraph] = useState([]);
     const [testimonialGraph, setTestimonialGraph] = useState([]);
@@ -82,13 +82,13 @@ export default function UserPage({ user, onClearUser }) {
           Home
         </Link>
         <Link color="inherit" href="/parentUsers">
-          {user.UserID} 
+          {user.ParentUsername} 
 
                 </Link>
           </Breadcrumbs>
             {/* Title */}
             <div className="customer-health-heading">
-                <span>{user.UserID} </span>
+                <span>{user.ParentUsername} </span>
                     </div>
                 </div>
             {/* Stats Cards */}
