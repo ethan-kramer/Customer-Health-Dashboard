@@ -1,13 +1,16 @@
 # FGCU Senior Project - Testimonial Tree
 
-Testimonial Tree is sponsoring a 2022 FGCU Senior Project. Testimonial Tree is partnering with 
+FGCU Senior Project 2022 Sponsored By Testimonial Tree
+Team Members:
 - Alessandra Guerra
 - Ethan Kramer
 - Patricia Andreica
 
 ## Customer Health Dashboard
-
-[Customer Health Dashboard One-Pager](Customer Health Dashboard One-Pager.pdf)
+* Uses a C# backend REST API to query the company’s database, aggregate data through various analytical means, and project the results to a React front-end helping them pinpoint real live issues.
+* Gives a high-level, summarized view of key user activities, while supporting the ability to view details on an account-by-account level to determine whether a client is healthy, borderline, or at risk for leaving the company.
+* Provides a searchable, clickable list of accounts with key figures that determine that account’s health.
+* Clicking on an account shows trends in the past year of activity including graphs depicting weekly testimonials sent vs. completed in the past year, average star rating, and average number of testimonials completed.
 
 ### Application Structure
 
@@ -15,45 +18,20 @@ The application has two separate parts: the frontend application (GUI) and the b
 
 #### Frontend Appliction
 
-The front end application located in [/app](/app) is a [React](https://reactjs.org/) application built with [Vite](https://vitejs.dev/). It will use the [MUI](https://mui.com/) componet library for page layouts and standard components. 
+The front end application located in [/app](/app) is a [React](https://reactjs.org/) application built with [Vite](https://vitejs.dev/). It will use the [MUI](https://mui.com/) component library for page layouts and standard components. 
 
-To get startted and runt he application a little local environment setup is required
+#### Backend Application
 
-1. Install nodejs (LTS) https://nodejs.org/en/
-2. Install yarn (globally)
-    
-    `npm install -g yarn`
+The backend application is located at customer-health-dashboard\api\customer-health-dashboard-webapi\customer-health-dashboard-webapi.sln
 
-3. clone this repository (https or ssh)
-    
-    `git clone https://gitlab.com/testimonialtree-group/fgcu-senior-project/customer-health-dashboard.git`
+## Screenshots of the Dashboard
 
-4. change directory to /app
-    
-    `cd customer-health-dashboard/app`
+### Hompeage with Searchable, Clickable List of Accounts
+![Screenshot 2023-04-12 162812](https://user-images.githubusercontent.com/62119661/231651864-b875d7c2-3c62-4527-9ce2-ccc85ac603bd.png)
 
-5. install depedencies
-    
-    `yarn install`
+### User Trend Page for WSBadcock
 
-6. run the applicaiton
-    
-    `yarn dev`
+### User Trend Page for Allentate
+The trends depicted in Allentate's user page indicate the start of an issue delivering data to the platform as well as when this issue was resolved.
+![image](https://user-images.githubusercontent.com/62119661/231651942-a2022a59-3462-4606-a3f1-190b27ca6c1d.png)
 
-#### Backend Applicaiton
-
-The backend application is located at C:\src\fgcu-senior-project\customer-health-dashboard\api\customer-health-dashboard-webapi\customer-health-dashboard-webapi.sln
-
-1.  Open using Visual Studio and select the "Solution View" not the "Folder View"
-
-2.  Right click the project titled "CustomerHealthDashboardWebApi" and choose Mangage User Secrets
-
-3.  Save a json file that looks like this as your local configuration source:
-{
-  "tt-connection-string": "Data Source=devdb.testimonialtree.com;Initial Catalog=TestimonialTree;User ID=fgcu;Password=mypasswordhere;Encrypt=True;TrustServerCertificate=True;MultipleActiveResultSets=True",
-  "tt-connection-timeout":  30
-}
-
-4.  Debug..Start Debugging to launch the application.  You should be able to browse the following path:
-
-https://localhost:7107/api/v1/parentusers
