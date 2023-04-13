@@ -30,7 +30,7 @@ The backend application is located at customer-health-dashboard\api\customer-hea
 ![Screenshot 2023-04-12 162812](https://user-images.githubusercontent.com/62119661/231651864-b875d7c2-3c62-4527-9ce2-ccc85ac603bd.png)
 
 ### User Trend Page for WSBadcock
-
+(Screenshot here)
 ### User Trend Page for Allentate
 The trends depicted in Allentate's user page indicate the start of an issue delivering data to the platform as well as when this issue was resolved.
 ![image](https://user-images.githubusercontent.com/62119661/231651942-a2022a59-3462-4606-a3f1-190b27ca6c1d.png)
