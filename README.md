@@ -18,7 +18,7 @@ The application has two separate parts: the frontend application (GUI) and the b
 
 #### Frontend Appliction
 
-The front end application located in [/app](/app) is a [React](https://reactjs.org/) application built with [Vite](https://vitejs.dev/). It will use the [MUI](https://mui.com/) component library for page layouts and standard components. 
+The front end application located in [/app](/app) is a [React](https://reactjs.org/) application built with [Vite](https://vitejs.dev/). It uses the [MUI](https://mui.com/) component library for page layouts and standard components. 
 
 #### Backend Application
 
