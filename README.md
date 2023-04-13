@@ -5,24 +5,12 @@ Team Members:
 - Alessandra Guerra
 - Ethan Kramer
 - Patricia Andreica
-
+### Goal: Help Testimonial Tree promptly identify and address genuine issues in real-time
 ## Description
-* Uses a C# backend REST API to query the company’s database, aggregate data through various analytical means, and project the results to a React front-end helping them pinpoint real live issues.
-* Gives a high-level, summarized view of key user activities, while supporting the ability to view details on an account-by-account level to determine whether a client is healthy, borderline, or at risk for leaving the company.
+* Employs a C# backend REST API used to query the company’s database and aggregate data using various analytical techniques. This data is then projected onto a React front-end GUI, which is developed using the Vite framework and incorporates the MUI component library for page layouts and standard components.
+* Gives a high-level, summarized view of key user activities, while supporting the ability to view details on an account-by-account level to view statistics that help determine whether a client is healthy, borderline, or at risk for leaving the company.
 * Provides a searchable, clickable list of accounts with key figures that determine that account’s health.
-* Clicking on an account shows trends of activity including graphs depicting weekly testimonials/surveys sent vs. completed in the past year, average star rating, and total number of testimonials/surveys completed.
-
-### Application Structure
-
-The application has two separate parts: the frontend application (GUI) and the backend applicaiton (API). We are keeping them in the same repository for simplicity.
-
-#### Frontend Appliction
-
-The front end application located in [/app](/app) is a [React](https://reactjs.org/) application built with [Vite](https://vitejs.dev/). It uses the [MUI](https://mui.com/) component library for page layouts and standard components. 
-
-#### Backend Application
-
-The backend application is located at customer-health-dashboard\api\customer-health-dashboard-webapi\customer-health-dashboard-webapi.sln
+* Clicking on an account shows more in-depth statistics and trends of activity including graphs depicting weekly testimonials/surveys sent vs. completed in the past year, average star rating, and total number of testimonials/surveys completed.
 
 ## Screenshots
 
