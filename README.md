@@ -24,7 +24,7 @@ The front end application located in [/app](/app) is a [React](https://reactjs.o
 
 The backend application is located at customer-health-dashboard\api\customer-health-dashboard-webapi\customer-health-dashboard-webapi.sln
 
-## Screenshots of the Dashboard
+## Screenshots
 
 ### Hompeage with Searchable, Clickable List of Accounts
 ![Screenshot 2023-04-12 162812](https://user-images.githubusercontent.com/62119661/231651864-b875d7c2-3c62-4527-9ce2-ccc85ac603bd.png)
