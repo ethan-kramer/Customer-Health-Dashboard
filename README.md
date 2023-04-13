@@ -1,4 +1,4 @@
-# FGCU Senior Project - Testimonial Tree
+# Customer Health Dashboard
 
 FGCU Senior Project 2022 Sponsored By Testimonial Tree
 Team Members:
@@ -6,7 +6,7 @@ Team Members:
 - Ethan Kramer
 - Patricia Andreica
 
-## Customer Health Dashboard
+## Description
 * Uses a C# backend REST API to query the company’s database, aggregate data through various analytical means, and project the results to a React front-end helping them pinpoint real live issues.
 * Gives a high-level, summarized view of key user activities, while supporting the ability to view details on an account-by-account level to determine whether a client is healthy, borderline, or at risk for leaving the company.
 * Provides a searchable, clickable list of accounts with key figures that determine that account’s health.
