@@ -30,8 +30,10 @@ The backend application is located at customer-health-dashboard\api\customer-hea
 ![Screenshot 2023-04-12 162812](https://user-images.githubusercontent.com/62119661/231651864-b875d7c2-3c62-4527-9ce2-ccc85ac603bd.png)
 
 ### User Trend Page for WSBadcock
-(Screenshot here)
+The trends in WSBadcock's user page indicate that the number of survey requests going out have gone from roughly 20k down to 2.5k in the last 3-4 weeks.
+![badcock_fullpage](https://user-images.githubusercontent.com/62119661/231655261-1eef58c6-466c-4e95-88be-7b4ac968eaea.png)
+
 ### User Trend Page for Allentate
-The trends depicted in Allentate's user page indicate the start of an issue delivering data to the platform as well as when this issue was resolved.
-![image](https://user-images.githubusercontent.com/62119661/231651942-a2022a59-3462-4606-a3f1-190b27ca6c1d.png)
+The trends in Allentate's user page indicate the start of an issue delivering data to the platform as well as when this issue was resolved.
+![allentate_fullpage](https://user-images.githubusercontent.com/62119661/231655302-9eef2cab-d11b-4055-a7a3-8693f9bf5d0d.png)
 
