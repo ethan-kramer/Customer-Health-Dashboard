@@ -14,7 +14,7 @@ Team Members:
 
 ## Screenshots
 
-### Hompeage with Searchable, Clickable List of Accounts
+### Homepage with Searchable, Clickable List of Accounts
 ![Screenshot 2023-04-12 162812](https://user-images.githubusercontent.com/62119661/231651864-b875d7c2-3c62-4527-9ce2-ccc85ac603bd.png)
 
 ### User Activity Page for WSBadcock
