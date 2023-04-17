@@ -5,7 +5,7 @@ Team Members:
 - Alessandra Guerra
 - Ethan Kramer
 - Patricia Andreica
-### Goal: Help Testimonial Tree promptly identify and address genuine issues in real-time
+### Goal: Help Testimonial Tree promptly identify and address genuine issues by providing a real-time view of key indicators known to contribute to long-term customer retention
 ## Description
 * Employs a C# backend REST API used to query the company’s database and aggregate data using various analytical techniques. This data is then projected onto a React front-end GUI, which is developed using the Vite framework and incorporates the MUI component library for page layouts and standard components.
 * Gives a high-level, summarized view of key user activities, while supporting the ability to view details on an account-by-account level to view statistics that help determine whether a client is healthy, borderline, or at risk for leaving the company.
